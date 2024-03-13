@@ -1,9 +1,13 @@
 import React from 'react'
 
-function Main() {
+const Detail = () => {
   return (
-    <div>Main</div>
+    <div>
+      <div>
+        zzxdfzsdfzdf
+      </div>
+    </div>
   )
 }
 
-export default Main
+export default Detail
