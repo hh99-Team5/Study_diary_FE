@@ -1,10 +1,11 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Detail from '../pages/DiaryDetail/main';
-import DiaryList from '../pages/DiaryList/main';
-import MyPage from '../pages/MyPage/main';
-import WriteDiary from '../pages/WriteDiary/main';
-import Home from '../pages/Home/main';
+
+import Detail from '../pages/DiaryDetail/Main'
+import DiaryList from '../pages/DiaryList/Main';
+import MyPage from '../pages/MyPage/Main';
+import WriteDiary from '../pages/WriteDiary/Main';
+import Home from '../pages/Home/Main';
 import Header from "../components/Header";
 
 
