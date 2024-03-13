@@ -1,12 +1,21 @@
 import React from "react";
-// 1. react-router-dom을 사용하기 위해서 아래 API들을 import 합니다.
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Detail from '../pages/DiaryDetail/Main';
+import DiaryList from '../pages/DiaryList/Main';
+import MyPage from '../pages/MyPage/Main';
+import WriteDiary from '../pages/WriteDiary/Main';
+import Home from '../pages/Home';
+
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/diaryList" element={<DiaryList />} />
+        <Route path="/:id" elemenet={<MyPage />} />
+        <Route path="/writeDiary" elemenet={<WriteDiary />} />
+        <Route path="/diary/:id" element={<Detail/>}/>
       </Routes>
     </BrowserRouter>
   );
