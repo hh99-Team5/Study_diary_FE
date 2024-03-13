@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-import Detail from '../pages/DiaryDetail/Main'
+import Detail from '../pages/DiaryDetail/Main';
 import DiaryList from '../pages/DiaryList/Main';
 import MyPage from '../pages/MyPage/Main';
 import WriteDiary from '../pages/WriteDiary/Main';

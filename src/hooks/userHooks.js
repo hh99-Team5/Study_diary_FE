@@ -11,6 +11,19 @@ export const useInput = () => {
   return {value, handler, ref};
 }
 
+// 상태 변화 hook
+export const useSwitch = () => {
+  const [state, setState] = useState(false);
+
+  const handleState = () => {
+      setState(!state);
+  }
+
+  return {state, handleState};
+}
+
+
+
 // 객체 반환 hook
 // export const useRepo = () => {
 //   const [model, setModel] = useState({});
@@ -22,14 +35,3 @@ export const useInput = () => {
 
 //   return {model, saveModel};
 // }
-
-// 상태 변화 hook
-export const useSwitch = () => {
-  const [state, setState] = useState(false);
-
-  const handleState = () => {
-      setState(!state);
-  }
-
-  return {state, handleState};
-}

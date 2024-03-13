@@ -5,21 +5,21 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 
-function LoginForm({onClose}) {
+const LoginForm = ({onClose}) => {
+
+    const {value: username, handler: onEmailChangeHandler, ref:usernameRef} = useInput();
+    const {value: password, handler: onPasswordChangeHandler, ref:passwordRef} = useInput();
     const[ user, setUser ] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
         usernameRef.current.focus();
         console.log(user);
-        if(user){
+        if(user.username && user.password){
             userLogin();
         }
     }, [user]);
 
-    const {value: username, handler: onEmailChangeHandler, ref:usernameRef} = useInput();
-    const {value: password, handler: onPasswordChangeHandler, ref:passwordRef} = useInput();
-    
     const userLogin = async () => {
         try {
             const response = await axios.post('http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/members/signin',
@@ -27,14 +27,23 @@ function LoginForm({onClose}) {
             console.log("login user = ",response);
             if(response.status === 200){
                 navigate("/diaryList");
-                alert("로그인 성공!");
+                alert(response.data.message);
             }
         } catch (error) {
-            console.log("error = ", error.response.data.email);
+            alert(error.response.data.message)
         }
     }
     
     const onSubmitHandler =  async() => {
+        if(!username) {
+            alert("이메일을 입력해주세요");
+            return
+        }
+        if(!password) {
+            alert("비밀번호를 입력해주세요");
+            return
+        }
+
         setUser({username, password});        
     }
 
