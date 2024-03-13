@@ -1,9 +1,15 @@
 import React from 'react'
+import Diaries from './components';
 
 const DiaryList = () => {
+
+
   return (
-    <div>components</div>
+    <div>
+      <Diaries />
+    </div>
   )
+
 }
 
-export default DiaryList
+export default DiaryList;

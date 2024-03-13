@@ -1,10 +1,16 @@
 import { AiTwotoneHome } from "react-icons/ai";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
 
 
 const Header = () => {
     const nav = useNavigate();
+    const location = useLocation();
+
+    // 홈 경로인 경우 null 반환
+    if (location.pathname === "/") {
+        return null;
+    }
 
     //로그아웃함수
 
