@@ -1,12 +1,14 @@
 import GlobalStyle from "./GlobalStyle";
 import './reset.css';
+import Router from "./shared/Router";
 
 function App() {
   return (
     <>
+    
       <GlobalStyle />
       <div>
-        <h1>hello world</h1>
+        <Router />
       </div>
     </>
   );
