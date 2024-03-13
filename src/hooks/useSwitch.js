@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useState = () => {
+const useInput = () => {
     const [state, setState] = useState(false);
 
     const handleState = () => {
@@ -9,3 +9,5 @@ const useState = () => {
 
     return {state, handleState};
 }
+
+export default useInput

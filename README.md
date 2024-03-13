@@ -23,3 +23,5 @@
 ### 11. react-router
 
 ### 12. json-server
+
+### 13. yarn add global react-scripts
