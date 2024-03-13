@@ -1,5 +1,3 @@
-// src/redux/modules/todosSlice.js
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
