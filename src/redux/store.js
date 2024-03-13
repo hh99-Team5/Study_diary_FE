@@ -1,12 +1,9 @@
-// src/redux/store.js
+// src/redux/modules/config/configStore.js
 
-import { configureStore } from '@reduxjs/toolkit';
-
+import { configureStore } from "@reduxjs/toolkit";
 
 const store = configureStore({
-  reducer: {
-    // 다른 리듀서들도 추가할 수 있습니다.
-  },
+  reducer: {},
 });
 
 export default store;
