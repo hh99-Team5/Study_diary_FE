@@ -1,13 +1,13 @@
 import React from 'react'
+import Diary from './components'
 
 const Detail = () => {
+
   return (
     <div>
-      <div>
-        zzxdfzsdfzdf
-      </div>
+      <Diary />
     </div>
   )
 }
 
-export default Detail
+export default Detail;
