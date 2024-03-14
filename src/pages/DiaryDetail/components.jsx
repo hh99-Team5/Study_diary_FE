@@ -12,7 +12,7 @@ const Diary = () => {
     const queryClient = useQueryClient();
     const [liked, setLiked] = useState(false);
     const cookie = new Cookies();
-    const accessToken = cookie.get("accessToken");
+    const jwtToken = cookie.get("jwtToken");
 
 
     const { isLoading, isError, data: diary } = useQuery(
@@ -24,13 +24,31 @@ const Diary = () => {
     const handleDeleteDiary = async (diaryId) => {
         await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${diaryId}`, {
             headers: {
-                Authorization: `${accessToken}`
+                Authorization: `${jwtToken}`
             }
         });
         // 쿼리 캐시에서 데이터 삭제
         queryClient.invalidateQueries(["diary", diaryId]);
     }
 
+    //좋아요 여부확인
+    const fetchLikedStatus = async () => {
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}/likes`,
+                {
+                    headers: {
+                        Authorization: `${jwtToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            console.log('like?', response.data.data.isChecked);
+            setLiked(response.data.data.isChecked);
+        } catch (error) {
+            console.error('Error fetching liked status:', error);
+        }
+    };
 
     //좋아요 토글
     const handleToggleLike = async () => {
@@ -38,31 +56,20 @@ const Diary = () => {
         try {
             await axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}/likes`, null,
-                { headers: { Authorization: `${accessToken}` } }
+                { headers: { Authorization: `${jwtToken}` } }
             );
             // 쿼리 캐시에서 데이터 다시 불러오기
             queryClient.invalidateQueries(["diary", id]);
+            fetchLikedStatus(); // 좋아요 상태를 다시 가져옴
         } catch (error) {
             console.error('Error toggling like:', error);
             setLiked(!liked);
         }
     }
 
-    //좋아요 눌렀는지 여부
     useEffect(() => {
-        const fetchLikedStatus = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}/likes`, 
-                    { headers: { 'Authorization': `${accessToken}`,
-                    'Content-Type': 'application/json' } });
-                console.log('like?', response.data.isChecked);
-                setLiked(response.data.isChecked); // 받아온 응답값으로 liked 상태 설정
-            } catch (error) {
-                console.error('Error fetching liked status:', error);
-            }
-        };
         fetchLikedStatus();
-    }, [accessToken, id]);
+    }, [jwtToken, id]);
 
 
     const LikeIcon = liked ? IoHeartSharp : IoHeartOutline;
@@ -78,6 +85,7 @@ const Diary = () => {
                 <p>{diary.title}</p>
                 <div>
                     <span>{diary.writer}</span>
+                    <button>수정</button>
                     <button onClick={() => handleDeleteDiary(diary.id)}>삭제</button>
                 </div>
                 <div style={{ border: "1px solid black", minHeight: "200px", overflowY: "auto" }}>
