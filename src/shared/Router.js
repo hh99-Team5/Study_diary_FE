@@ -15,7 +15,7 @@ const Router = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/diaryList" element={<DiaryList />} />
-        <Route path="/:id" elemenet={<MyPage />} />
+        <Route path="/:id" element={<MyPage />} />
         <Route path="/add" element={<AddDiary />} />
         <Route path="/diary/:id" element={<Detail />} />
       </Routes>
