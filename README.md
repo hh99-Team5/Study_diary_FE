@@ -26,6 +26,12 @@
 
 ### 13. yarn add global react-scripts
 
-## 사용한 Context
+## Refactoring
 
-### navigate
+### Login
+
+- src/components/AuthFormFunctions/
+  userLoginCall(LoginFunctions)
+  userLoginValidation((LoginFunctions))
+
+### Register
