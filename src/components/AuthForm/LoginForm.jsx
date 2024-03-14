@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { userLoginCall, userLoginValidation } from './Functions/LoginFunctions';
-import Cookies from 'universal-cookie';
+
 
 const LoginForm = ({onClose}) => {
     const {value: username, handler: onEmailChangeHandler, ref:usernameRef} = useInput();
@@ -22,6 +22,7 @@ const LoginForm = ({onClose}) => {
     const userLogin = async () => {
         try {
             const reponse = await userLoginCall(user);
+            console.log("component reponse = ", reponse);
             alert(reponse.data.message);
             if(reponse.status === 200) navigate("/diaryList");
         } catch (error) {
