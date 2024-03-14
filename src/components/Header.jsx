@@ -8,7 +8,7 @@ const Header = () => {
     const location = useLocation();
 
     // 홈 경로인 경우 null 반환
-    if (location.pathname === "/") {
+    if (location.pathname === "/diaryList") {
         return null;
     }
 
@@ -17,7 +17,7 @@ const Header = () => {
     return (
         <div>
             <HeaderDiv>
-                <AiTwotoneHome size={30} style={{ cursor: 'pointer' }} onClick={() => { nav("/") }} />
+                <AiTwotoneHome size={30} style={{ cursor: 'pointer' }} onClick={() => { nav("/diaryList") }} />
                 <div>
                     <StyledSpan >마이페이지</StyledSpan>
                     <StyledSpan onClick={() => { /* 로그아웃함수 */ }}>로그아웃</StyledSpan>
