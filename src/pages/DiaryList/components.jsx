@@ -104,6 +104,7 @@ const Diaries = () => {
                     </tbody>
                 )}
             </table>
+            <button>일지 쓰기</button>
         </div>
     );
 }
