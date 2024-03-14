@@ -1,9 +1,10 @@
 import React from 'react'
+import Mypage from './components'
 
-function Main() {
+function MyPage() {
   return (
-    <div>Main</div>
+    <div><Mypage /></div>
   )
 }
 
-export default Main
+export default MyPage
