@@ -5,9 +5,17 @@ import { useParams } from 'react-router';
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { GoComment } from "react-icons/go";
 import Cookies from 'universal-cookie';
-
+import { useSwitch, useInput } from '../../hooks/userHooks';
+import { diaryUpdateMode } from './UpdateDiary';
+import { useMutation } from 'react-query';
 
 const Diary = () => {
+    // 남윤하 코드
+    const {state:diaryMode, handleState: diaryModeHandler} = useSwitch();
+    const {value:diaryContent, handler:diaryContentHandler, ref:diaryContentRef} = useInput();
+    
+    
+
     const { id } = useParams();
     const queryClient = useQueryClient();
     const [liked, setLiked] = useState(false);
@@ -17,19 +25,20 @@ const Diary = () => {
 
     const { isLoading, isError, data: diary } = useQuery(
         ["diary", id],
-        () => axios.get(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}`).then((res) => res.data.data),
+        async () => {
+            const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}`);
+            return response.data.data;
+        },
     );
-
-
-    const handleDeleteDiary = async (diaryId) => {
-        await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${diaryId}`, {
-            headers: {
-                Authorization: `${jwtToken}`
-            }
-        });
-        // 쿼리 캐시에서 데이터 삭제
-        queryClient.invalidateQueries(["diary", diaryId]);
-    }
+    // const handleDeleteDiary = async (diaryId) => {
+    //     await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${diaryId}`, {
+    //         headers: {
+    //             Authorization: `${jwtToken}`
+    //         }
+    //     });
+    //     // 쿼리 캐시에서 데이터 삭제
+    //     queryClient.invalidateQueries(["diary", diaryId]);
+    // }
 
     //좋아요 여부확인
     const fetchLikedStatus = async () => {
@@ -66,18 +75,69 @@ const Diary = () => {
             setLiked(!liked);
         }
     }
-
     useEffect(() => {
         fetchLikedStatus();
-    }, [jwtToken, id]);
+    }, [fetchLikedStatus, jwtToken, id]);
+
+
+
+    // 남윤하 코드
+    // 작성한 유저 체크 
+    let newDiary = diary ? {title: diary.title, contents: diaryContent} : null;
+
+    const token = cookie.get('jwtToken');
+    const userToken = token ? token.replace("Bearer ", "") : null;
+
+    // 남윤하 코드
+    const diaryUpdateMutation = useMutation(
+        async(newData) => {
+            try {
+                console.log("newData = ", newData);
+                const updateDiary = await axios.put(`http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/articles/${id}`,
+                newData, { headers:{'Authorization': `Bearer ${userToken}`}});
+                console.log("updateDiary = ", updateDiary);
+            } catch (error) {
+                console.log("updateDiary error =", error);
+            }
+        }, {
+            onSuccess: () => {
+                queryClient.invalidateQueries(["diary", id]);
+                alert("수정에 성공했습니다!");
+                diaryModeHandler()
+            },
+            onError: () => {
+                alert("수정에 실패 했습니다.");
+            }
+    })
+
+    
+    const diaryChangeBtn = async () =>{
+        const loginUser = await diaryUpdateMode(userToken);
+        if(loginUser.email !== diary.writer) {
+            alert(`자신이 작성한 글만 수정 가능합니다.`)
+            return
+        } 
+        diaryModeHandler()
+    }
+
+    const diaryUpdateBtn = async (mode) => {
+        const loginUser = await diaryUpdateMode(userToken);
+        if(loginUser.email !== diary.writer) {
+            alert(`자신이 작성한 글만 ${mode} 가능합니다.`)
+            return
+        } 
+        if(mode === "수정"){
+            diaryUpdateMutation.mutate(newDiary);
+        }
+    }
+
+
 
 
     const LikeIcon = liked ? IoHeartSharp : IoHeartOutline;
 
-
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error fetching diary</div>;
-
 
     return (
         <div>
@@ -85,19 +145,38 @@ const Diary = () => {
                 <p>{diary.title}</p>
                 <div>
                     <span>{diary.writer}</span>
-                    <button>수정</button>
-                    <button onClick={() => handleDeleteDiary(diary.id)}>삭제</button>
+                {!diaryMode ?
+                    <>
+                        <button onClick={() => diaryChangeBtn()}>수정</button>
+                        <button onClick={() => diaryUpdateBtn("삭제")}>삭제</button>
+                    </>
+                    :
+                    <>
+                        <button onClick={() => diaryUpdateBtn("수정")}>저장</button>
+                        <button onClick={() => diaryModeHandler()}>취소</button>
+                    </>
+                }
                 </div>
-                <div style={{ border: "1px solid black", minHeight: "200px", overflowY: "auto" }}>
-                    {diary.contents}
-                </div>
+                
+                {!diaryMode ?
+                    <div style={{ border: "1px solid black", minHeight: "200px", overflowY: "auto" }}>
+                        {diary.contents}
+                    </div>
+                    :
+                    <div style={{ border: "1px solid black", minHeight: "200px", overflowY: "auto" }}>
+                        <textarea  cols="30" rows="10" onChange={diaryContentHandler} value={diaryContent} ></textarea>
+                    </div>
+                }
             </div>
+            {!diaryMode ?
             <div>
                 <LikeIcon onClick={handleToggleLike} />
                 <span>좋아요 {diary.like}</span>
                 <GoComment />
                 <span>댓글 </span>
             </div>
+            :
+            <div></div>}
         </div>
     );
 

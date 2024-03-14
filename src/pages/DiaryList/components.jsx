@@ -104,7 +104,7 @@ const Diaries = () => {
                     </tbody>
                 )}
             </table>
-            <button>일지 쓰기</button>
+            <button onClick={() => nav("/add")}>일지 쓰기</button>
         </div>
     );
 }
