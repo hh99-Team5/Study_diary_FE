@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { userLoginCall, userLoginValidation } from './Functions/LoginFunctions';
+import Cookies from 'universal-cookie';
 
 const LoginForm = ({onClose}) => {
     const {value: username, handler: onEmailChangeHandler, ref:usernameRef} = useInput();
@@ -19,10 +20,13 @@ const LoginForm = ({onClose}) => {
     }, [user]);
 
     const userLogin = async () => {
-        const reponse = await userLoginCall(user);
-        alert(reponse.data.message);
-        if(reponse.status === 200) navigate("/diaryList");
-        
+        try {
+            const reponse = await userLoginCall(user);
+            alert(reponse.data.message);
+            if(reponse.status === 200) navigate("/diaryList");
+        } catch (error) {
+            alert("로그인 실패!")
+        }
     }
 
     const onSubmitHandler =  async() => {

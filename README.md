@@ -30,8 +30,11 @@
 
 ### Login
 
-- src/components/AuthFormFunctions/
-  userLoginCall(LoginFunctions)
-  userLoginValidation((LoginFunctions))
+- userLoginCall
+- userLoginValidation
 
 ### Register
+
+- emailCheckInvalidation
+- oncheckPwInvalidation
+- onSubmitInvalidation
