@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useInput } from '../../hooks/userHooks';
+import { emailCheckInvalidation, oncheckPwInvalidation, onSubmitInvalidation } from './Functions/RegisterFunctions';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useRef } from 'react';
@@ -38,67 +39,28 @@ function RegisterForm({onClose}) {
         }
     }
 
-    const onSubmitHandler =  async() => {
-        if(!email) {
-            alert("이메일을 입력해주세요");
-            emailRef.current.focus();
-            return
-        }
-        if(!password) {
-            alert("비밀번호를 입력해주세요");
-            passwordRef.current.focus();
-            return
-        }
-        if(duplicate) {
-            alert("중복된 이메일 입니다.");
-            emailRef.current.focus();
-            return
-        }
-        if(!pwCheck) {
-            alert("비밀 번호 일치여부를 확인해주세요");
-            checkPwref.current.focus();
-            return
-        }
-        setUser({email, password});        
+    const onSubmitHandler =  async() => {    
+        const response = await onSubmitInvalidation
+        (email, emailRef,
+        password, passwordRef,
+        duplicate,
+        pwCheck, checkPwref);
+        if(response) setUser(response);      
     }
 
-
     const emailCheck = async () => {
-        if(!email){
-            alert("이메일을 입력해주세요");
-            return
-        }
-        try {
-            const response = await axios.get(`http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/members/email-check?email=${email}`);
-            console.log("duplicate response = ", response.data.data.isExist);
-            if(response.data.data.isExist){ 
-                setDuplicate(true)
-                alert("이미 존재하는 이메일 입니다.")
-            } else{ 
-                setDuplicate(false)
-                alert("사용 가능한 이메일 입니다.") 
-            }
-            
-        } catch (error) {
-            console.log("duplicate error = ", error);
-        }
+        const response = await emailCheckInvalidation(email);
+        if(!response) return
+        setDuplicate(response.data.isExist);
+        response.data.data.isExist 
+        ? alert("이미 존재하는 이메일 입니다.") 
+        : alert("사용 가능한 이메일 입니다.")
     }
 
     const oncheckPw = () => {
-        if(!password){
-            alert("비밀번호를 입력해주세요");
-            setCheckText("")
-            return
-        }
-        if(password === checkPw) {
-            setPwCheck(true);
-            pwTextRef.current.style.color = "green";
-            setCheckText("비밀번호가 일치 합니다.")
-        } else {
-            setPwCheck(false);
-            pwTextRef.current.style.color = "red"; // 
-            setCheckText("비밀번호가 일치하지 않습니다.")
-        }
+        const response = oncheckPwInvalidation(password, checkPw, pwTextRef);
+        setCheckText(response.text);
+        setPwCheck(response.boolean);
     }
 
     return (

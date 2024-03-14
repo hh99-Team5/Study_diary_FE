@@ -2,16 +2,14 @@ import React from 'react'
 import { useInput } from '../../hooks/userHooks';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { userLoginCall, userLoginValidation } from './Functions/LoginFunctions';
 
 const LoginForm = ({onClose}) => {
-
     const {value: username, handler: onEmailChangeHandler, ref:usernameRef} = useInput();
     const {value: password, handler: onPasswordChangeHandler, ref:passwordRef} = useInput();
     const[ user, setUser ] = useState({});
     const navigate = useNavigate();
-
     useEffect(() => {
         usernameRef.current.focus();
         console.log(user);
@@ -21,30 +19,18 @@ const LoginForm = ({onClose}) => {
     }, [user]);
 
     const userLogin = async () => {
-        try {
-            const response = await axios.post('http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/members/signin',
-        user)
-            console.log("login user = ",response);
-            if(response.status === 200){
-                navigate("/diaryList");
-                alert(response.data.message);
-            }
-        } catch (error) {
-            alert(error.response.data.message)
-        }
+        const reponse = await userLoginCall(user);
+        alert(reponse.data.message);
+        if(reponse.status === 200) navigate("/diaryList");
+        
     }
-    
-    const onSubmitHandler =  async() => {
-        if(!username) {
-            alert("이메일을 입력해주세요");
-            return
-        }
-        if(!password) {
-            alert("비밀번호를 입력해주세요");
-            return
-        }
 
-        setUser({username, password});        
+    const onSubmitHandler =  async() => {
+        if(userLoginValidation(username, password)){
+            setUser({username, password});   
+        } else {
+            return
+        }
     }
 
   return (
