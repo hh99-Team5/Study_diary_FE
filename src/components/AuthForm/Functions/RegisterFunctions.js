@@ -6,7 +6,7 @@ export const emailCheckInvalidation = async (email) => {
         return false
     }
     try {
-        return await axios.get(`http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/members/email-check?email=${email}`);        
+        return await axios.get(`https://www.openmpy.com/api/v1/members/email-check?email=${email}`);        
     } catch (error) {
         console.log("duplicate error = ", error);
     }
