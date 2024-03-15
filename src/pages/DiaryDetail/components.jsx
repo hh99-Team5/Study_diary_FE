@@ -93,7 +93,7 @@ const Diary = () => {
         async(newData) => {
             try {
                 console.log("newData = ", newData);
-                const updateDiary = await axios.put(`http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/articles/${id}`,
+                const updateDiary = await axios.put(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}`,
                 newData, { headers:{'Authorization': `Bearer ${userToken}`}});
                 console.log("updateDiary = ", updateDiary);
             } catch (error) {
