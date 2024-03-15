@@ -5,6 +5,19 @@ import { emailCheckInvalidation, oncheckPwInvalidation, onSubmitInvalidation } f
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useRef } from 'react';
+import { Button } from '../styles';
+import 
+    { 
+    Input, 
+    FormFactor,
+    FormContentElement,
+    Wrapper,
+    Form,
+    FormTitle,
+    FormContent,
+    FormButtonArea,
+    } 
+from './styles';
 
 function RegisterForm({onClose}) {
     const [ user, setUser ] = useState({});
@@ -64,27 +77,35 @@ function RegisterForm({onClose}) {
     }
 
     return (
-    <div>
-        <div>
-            <form onSubmit={(e) => {e.preventDefault()}}>
-            <div>
+    <Wrapper>
+        <Form onSubmit={(e) => {e.preventDefault()}}>
+            <FormTitle>
                 <h1>회원가입</h1>
-            </div>
-            <div>
-                <div>Email: <input ref={emailRef} type='email' onChange={onEmailChangeHandler} value={email} />&nbsp;
-                <button onClick={() => emailCheck()}>중복검사</button></div>
-                <div>Password: <input ref={passwordRef} type="password" onChange={onPasswordChangeHandler} value={password} />&nbsp;
-                <button onClick={() => oncheckPw()}>일치검사</button></div>
-                <div><p ref={pwTextRef}>{checkText}</p></div>
-                <div><input ref={checkPwref} type="password" onChange={oncheckPwHandler} value={checkPw}/></div>
-            </div>
-            <div>
-                <button onClick={() => onSubmitHandler()}>회원가입</button>
-                <button onClick={onClose}>취소</button>
-            </div>
-            </form>
-        </div>
-    </div>
+            </FormTitle>
+            <FormContent>
+                <FormContentElement>
+                    <FormFactor>Email</FormFactor> 
+                    <Input ref={emailRef} type='email' onChange={onEmailChangeHandler} value={email} />
+                    <Button onClick={() => emailCheck()}>중복검사</Button>
+                </FormContentElement>
+                <FormContentElement>
+                    <FormFactor>Password</FormFactor>
+                    <Input ref={passwordRef} type="password" onChange={onPasswordChangeHandler} value={password} />
+                    <Button onClick={() => oncheckPw()}>일치검사</Button>
+                </FormContentElement>
+                <FormContentElement>
+                    <FormFactor>비밀번호 재입력</FormFactor>                    
+                    <Input ref={checkPwref} type="password" onChange={oncheckPwHandler} value={checkPw}/>
+                    <div></div>
+                </FormContentElement>
+            </FormContent>
+            <FormFactor ref={pwTextRef}>{checkText}</FormFactor>
+            <FormButtonArea>
+                <Button onClick={() => onSubmitHandler()}>회원가입</Button>
+                <Button onClick={onClose}>취소</Button>
+            </FormButtonArea>
+        </Form>
+    </Wrapper>
   )
 }
 
