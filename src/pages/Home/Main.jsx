@@ -6,12 +6,14 @@ import { useEffect } from 'react'
 import UserModal from '../../components/modals/UserModal'
 import ModalPortal from '../../components/modals/Portal'
 import { useSwitch } from '../../hooks/userHooks'
+import { useSelector } from 'react-redux';
 
 function Main() {
+    const user = useSelector((state) => state.user.value);
     const nav = useNavigate();
     const cookie = new Cookies();
     const jwtToken = cookie.get('jwtToken')
-
+    console.log("redux user = ", user);
     useEffect(() => {
         if(jwtToken){
             alert('이미 로그인 된 유저입니다.')
@@ -28,6 +30,7 @@ function Main() {
     }
     return (
         <div>
+            <h1>{user.position}</h1>
             <button onClick={() => onModalHandler("LOGIN")}>로그인</button>
             <button onClick={() => onModalHandler("REGISTER")}>회원가입</button>
             <ModalPortal>
