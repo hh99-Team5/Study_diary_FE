@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 export const userLoginCall = async (user) => {
     const cookie = new Cookies();
     try {
-        const response = await axios.post('http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/members/signin',
+        const response = await axios.post('https://www.openmpy.com/api/v1/members/signin',
         user);
         const jwtToken = response.headers.authorization;
         cookie.set('jwtToken', jwtToken, {path: "/", maxAge: 3600});
