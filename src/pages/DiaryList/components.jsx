@@ -3,9 +3,13 @@ import { useQuery } from 'react-query';
 import axios from "axios";
 import { useRef } from "react";
 import { useNavigate } from "react-router";
+import { useSelector } from 'react-redux';
 
 
 const Diaries = () => {
+    const user = useSelector((state) => state.user.value);
+    console.log("redux user = ", user);
+
     //검색조건, 검색어, 검색상태 관리
     const [type, setType] = useState('');
     const [keyword, setKeyword] = useState('');
