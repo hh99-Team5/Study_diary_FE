@@ -7,9 +7,12 @@ import axios from 'axios';
 import { blankInvalidation } from './Functions/DiaryFunction';
 import { useMutation } from 'react-query';
 import { useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
+
 
 const AddDiary = () => {
-  
+  const user = useSelector((state) => state.user.value);
+  console.log("redux user = ", user);
   const {value:title, handler:onTitleHandler, ref:titleRef} = useInput();
   const {value:contents, handler:onContentHandler, ref:contentRef } = useInput();
   const cookie = new Cookies();
@@ -17,6 +20,7 @@ const AddDiary = () => {
   const userToken = jwtToken ? jwtToken.replace("Bearer ", "") : "";
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   useEffect(() => {
     console.log("userToken = ", userToken);
     if(!userToken){
@@ -24,7 +28,6 @@ const AddDiary = () => {
       navigate("/");
     }
   }, [])
-
 
   // 일지 추가 mutation
   const addDiaryMutation = useMutation( 
