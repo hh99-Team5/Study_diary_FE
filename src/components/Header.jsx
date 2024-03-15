@@ -1,6 +1,8 @@
 import { AiTwotoneHome } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../redux/modules/userSlice";
 import Cookies from "universal-cookie";
 
 
@@ -8,18 +10,21 @@ const Header = () => {
     const nav = useNavigate();
     const location = useLocation();
     const cookie = new Cookies();
+    const dispatch = useDispatch();
 
     // 홈 경로인 경우 null 반환
-    if (location.pathname === "/diaryList") {
+    if (location.pathname === "/") {
         return null;
     }
 
     //로그아웃함수
-    const logoutHandler = () =>{
-        cookie.remove('jwtToken');
+    const onLogoutHandler = () => {
+        cookie.remove("jwtToken");
+        dispatch(logoutUser());
         alert("로그아웃 되었습니다.");
         nav("/");
     }
+
 
     return (
         <div>
@@ -27,7 +32,7 @@ const Header = () => {
                 <AiTwotoneHome size={30} style={{ cursor: 'pointer' }} onClick={() => { nav("/diaryList") }} />
                 <div>
                     <StyledSpan >마이페이지</StyledSpan>
-                    <StyledSpan onClick={() => logoutHandler()}>로그아웃</StyledSpan>
+                    <StyledSpan onClick={() => onLogoutHandler()}>로그아웃</StyledSpan>
                 </div>
             </HeaderDiv>
             <HeaderBorder />
