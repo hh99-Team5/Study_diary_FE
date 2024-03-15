@@ -5,6 +5,19 @@ import { useNavigate } from 'react-router';
 import { userLoginCall, userLoginValidation } from './Functions/LoginFunctions';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../redux/modules/userSlice';
+import { Button } from '../styles';
+import 
+    { 
+    Input, 
+    FormFactor,
+    FormContentElement,
+    Wrapper,
+    Form,
+    FormTitle,
+    FormContent,
+    FormButtonArea,
+    } 
+from './styles';
 
 
 const LoginForm = ({ onClose }) => {
@@ -44,23 +57,27 @@ const LoginForm = ({ onClose }) => {
     }
 
     return (
-        <div>
-            <div>
-                <form onSubmit={(e) => e.preventDefault()}>
-                    <div>
-                        <h1>로그인</h1>
-                    </div>
-                    <div>
-                        <div>Email: <input ref={usernameRef} type="email" onChange={onEmailChangeHandler} value={username} /></div>
-                        <div>Password: <input ref={passwordRef} type="password" onChange={onPasswordChangeHandler} value={password} /></div>
-                    </div>
-                    <div>
-                        <button onClick={() => onSubmitHandler()}>로그인</button>
-                        <button onClick={onClose}>취소</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <Wrapper>
+            <Form onSubmit={(e) => e.preventDefault()}>
+                <FormTitle>
+                    <h1>로그인</h1>
+                </FormTitle>
+                <FormContent>
+                    <FormContentElement>
+                        <FormFactor>Email</FormFactor>
+                        <Input ref={usernameRef} type="email" onChange={onEmailChangeHandler} value={username} />
+                    </FormContentElement>
+                    <FormContentElement>
+                        <FormFactor>Password </FormFactor>
+                        <Input ref={passwordRef} type="password" onChange={onPasswordChangeHandler} value={password} />
+                    </FormContentElement>
+                </FormContent>
+                <FormButtonArea>
+                    <Button onClick={() => onSubmitHandler()}>로그인</Button>
+                    <Button onClick={onClose}>취소</Button>
+                </FormButtonArea>
+            </Form>
+        </Wrapper>
     );
 }
 
