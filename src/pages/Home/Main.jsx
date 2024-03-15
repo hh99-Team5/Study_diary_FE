@@ -16,8 +16,7 @@ import
         SelectArea,
         Container 
     } from '../../components/styles'
-
-
+    
 const Main = () => {
     const user = useSelector((state) => state.user.value);
     const nav = useNavigate();
@@ -30,8 +29,6 @@ const Main = () => {
             nav("/diaryList")
         }
     }, [])
-
-    
     const { state: modalOn, handleState: handleModal } = useSwitch();
     const [mode, setMode] = useState(null);
     const onModalHandler = (mod) => {
