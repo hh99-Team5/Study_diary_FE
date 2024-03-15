@@ -1,27 +1,26 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useQuery, useQueryClient } from 'react-query';
-import { useParams } from 'react-router';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import { useParams, useNavigate } from 'react-router';
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { GoComment } from "react-icons/go";
 import Cookies from 'universal-cookie';
 import { useSwitch, useInput } from '../../hooks/userHooks';
 import { diaryUpdateMode } from './UpdateDiary';
-import { useMutation } from 'react-query';
+
 
 const Diary = () => {
     // 남윤하 코드
     const {state:diaryMode, handleState: diaryModeHandler} = useSwitch();
     const {value:diaryContent, handler:diaryContentHandler, ref:diaryContentRef} = useInput();
-    
-    
+    const nav = useNavigate();
+    // 
 
     const { id } = useParams();
     const queryClient = useQueryClient();
     const [liked, setLiked] = useState(false);
     const cookie = new Cookies();
     const jwtToken = cookie.get("jwtToken");
-
 
     const { isLoading, isError, data: diary } = useQuery(
         ["diary", id],
@@ -30,6 +29,7 @@ const Diary = () => {
             return response.data.data;
         },
     );
+
     // const handleDeleteDiary = async (diaryId) => {
     //     await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${diaryId}`, {
     //         headers: {
@@ -110,6 +110,24 @@ const Diary = () => {
             }
     })
 
+    const diaryDeleteMutation = useMutation(
+        async (id) => {
+            await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}`, {
+                headers: {
+                    Authorization: `${jwtToken}`
+                }
+            })
+        },{
+            onSuccess: () =>{
+                queryClient.invalidateQueries("diaries");
+                nav("/diaryList");
+                alert("삭제 성공!");
+            },
+            onError: () => {
+                alert("삭제 실패!");
+            }
+        }
+    )
     
     const diaryChangeBtn = async () =>{
         const loginUser = await diaryUpdateMode(userToken);
@@ -128,6 +146,9 @@ const Diary = () => {
         } 
         if(mode === "수정"){
             diaryUpdateMutation.mutate(newDiary);
+        }
+        if(mode === "삭제"){
+            diaryDeleteMutation.mutate(id);
         }
     }
 
