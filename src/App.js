@@ -1,16 +1,41 @@
+import { QueryClient, QueryClientProvider } from "react-query";
 import GlobalStyle from "./GlobalStyle";
 import './reset.css';
 import Router from "./shared/Router";
+import { createContext } from "react";
+import Cookies from "universal-cookie";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
-function App() {
+export const UserContext = createContext(null);
+const cookie = new Cookies();
+const jwtToken = cookie.get('jwtToken');
+const App =() => {
+  const [userInfo, setUser] = useState({});
+  useEffect(() => {
+    if(jwtToken){
+      loginUser();
+    }
+  },[])
+  const loginUser = async() => {
+    const response = await axios.get("https://www.openmpy.com/api/v1/members",
+    { headers:{'Authorization': jwtToken }})
+    setUser(response.data.data);
+  }
+
+  if(userInfo){
+    console.log("user = ", userInfo);
+  }
+  
+  const queryClient = new QueryClient();
   return (
-    <>
-    
-      <GlobalStyle />
-      <div>
-        <Router />
-      </div>
-    </>
+    <UserContext.Provider value={{userInfo}}>
+      <QueryClientProvider client={queryClient}>
+        <GlobalStyle />
+          <Router />
+      </QueryClientProvider>
+    </UserContext.Provider>
   );
 }
 

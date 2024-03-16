@@ -1,25 +1,50 @@
+# Study Diary Project (공부일지)
+
+- 공부 기록 공유와 기록에 관한 의견 공유
+- FE: 하나래 임채리 남윤하
+
 ## 사용 된 라이브러리
 
-### 1. react-router-dom
+1. react-router-dom
+2. react-query
+3. react-icons
+4. styled-components
+5. axios
+6. jwt-decode
+7. @reduxjs/toolkit
+8. universal-cookie
+9. react-dom
+10. react-redux
+11. react-router
+12. json-server
+13. yarn add global react-scripts
 
-### 2. react-query
+## 사용한 Hook
 
-### 3. react-icons
+- useState
+- useEffecy
+- useRef
+- useContext
 
-### 4. styled-components
+### CustomHooks
 
-### 5. axios
+- useInput: 입력값 저장과, ref를 통한 요소 조회 (yunha)
+- useSwitch: state의 상태값 변화주기, modal 열기 닫기에 적용 (yunha)
 
-### 6. jwt-decode
+## Refactoring
 
-### 7. @reduxjs/toolkit
+### Login
 
-### 8. universal-cookie
+- userLoginCall (yunha)
+- userLoginValidation (yunha)
 
-### 9. react-dom
+### Register
 
-### 10. react-redux
+- emailCheckInvalidation (yunha)
+- oncheckPwInvalidation (yunha)
+- onSubmitInvalidation (yunha)
 
-### 11. react-router
+## Modal
 
-### 12. json-server
+- UserModal: 회원가입 로그인 (yunha)
+- ListModal: 내가 쓴 일지 확인 (yunha)
