@@ -36,3 +36,8 @@
 - emailCheckInvalidation (yunha)
 - oncheckPwInvalidation (yunha)
 - onSubmitInvalidation (yunha)
+
+## Modal
+
+- UserModal: 회원가입 로그인 (yunha)
+- ListModal: 내가 쓴 일지 확인 (yunha)

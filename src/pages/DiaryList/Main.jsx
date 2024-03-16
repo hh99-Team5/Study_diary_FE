@@ -58,9 +58,6 @@ const Diaries = () => {
         { enabled: searched } // 검색을 했고 검색어가 공백이 아닌 경우에만 활성화
     );
 
-    
-
-
     const handleSearch = () => {
         const inputValue = keywordRef.current.value;
         setKeyword(inputValue);
