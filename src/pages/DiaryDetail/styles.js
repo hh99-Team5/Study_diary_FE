@@ -49,10 +49,11 @@ export const ButtonArea = styled.div`
 export const Button = styled.button`
     text-align: center;
     color: #929292;
-    width: ${(props) => (props.border ? '40px' : 'none')};
-    height: 25px;
+    font-size: ${(props) => (props.border ? '15px' : 'none')};
+    width: ${(props) => (props.border ? '100px' : 'none')};
+    height: ${(props) => (props.border ? '35px' : '25px')};
     border: ${(props) => (props.border ? '1px solid #929292' : 'none')};
-    border-radius: ${(props) => (props.border ? '5px' : 'none')};
+    border-radius: ${(props) => (props.border ? '15px' : 'none')};
     margin-left: ${(props) => (props.border ? '5px' : '-2px')};
     background-color: white;
     cursor: pointer;
@@ -98,6 +99,7 @@ export const CommentHeader = styled.div`
 export const CommentHeaderRight = styled.div`
     display: block;
     text-align: right;
+    height: 47.5px;
 `;
 
 export const MiddleText = styled.div`
@@ -108,6 +110,7 @@ export const MiddleText = styled.div`
 export const CommentText = styled.div`
     min-height: 40px;
     margin-left: 20px;
+    margin-right: 20px;
     margin-bottom: 10px;
 `;
 
@@ -119,4 +122,23 @@ export const StyledTextarea = styled.textarea`
     border: ${(props) => (props.border ? '1px solid #ccc' : 'none')};
     border-radius: ${(props) => (props.border ? '5px' : 'none')};
     resize: none;
+`;
+
+export const ScrollableContainer = styled.div`
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d9d7d7 white;
+    margin: 8px;
+    
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #929292;
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: white;
+    }
 `;
