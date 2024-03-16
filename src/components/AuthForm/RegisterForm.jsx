@@ -40,7 +40,7 @@ function RegisterForm({onClose}) {
 
     const userReposit = async () => {
         try {
-            const response = await axios.post('http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/members/signup',
+            const response = await axios.post('https://www.openmpy.com/api/v1/members/signup',
         user);
             console.log("login user = ",response);
             if(response.status === 201){
