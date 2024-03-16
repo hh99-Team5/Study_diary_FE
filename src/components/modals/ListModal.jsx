@@ -12,10 +12,22 @@ import {
     SelectWrapper,
  } from '../../pages/DiaryList/styles'
 import { Link } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode'
+import Cookies from 'universal-cookie'
+
 
 import styled from 'styled-components'
 
 const ListModal = ({onClose}) => {
+    const cookie = new Cookies()
+    const userToken = cookie.get('jwtToken');
+    const decodeToken = jwtDecode(userToken);
+
+    console.log("decodeToken = ", decodeToken.sub);
+
+    const loginUserEmail = decodeToken.sub;
+
+    console.log("loginUserEmail type = ", typeof loginUserEmail );
     const [myList, setMyList] = useState([]);
 
     const { data } = useQuery('myDiaries', async () => {
@@ -26,7 +38,8 @@ const ListModal = ({onClose}) => {
     console.log("Data", data);
     useEffect(() => {
         if (data) {
-            setMyList(data);
+            let userDiary = data.filter((diary) => diary.writer === loginUserEmail);
+            setMyList(userDiary);
             console.log("myList = ", myList);
         }
     }, [data]);
@@ -43,8 +56,8 @@ const ListModal = ({onClose}) => {
                     <DiaryList>
                         <Table>
                             <Thead>
-                                <tr>
-                                    <th>번호</th>
+                                <tr style={{backgroundColor: "tomato", color:"white", fontWeight: "700"}}>
+                                    <th style={{padding: "2% 0"}}>번호</th>
                                     <th>작성자</th>
                                     <th>제목</th>
                                     <th>좋아요</th>
@@ -52,11 +65,11 @@ const ListModal = ({onClose}) => {
                             </Thead>
                             <Tbody>
                             {myList ? myList.map((diary) => (
-                                <tr key={diary.id}> {/* 각 항목에 고유한 key 값을 설정해주어야 함 */}
+                                <tr style={{fontWeight: "700"}} key={diary.id}> {/* 각 항목에 고유한 key 값을 설정해주어야 함 */}
                                     <TableCell>{diary.id}</TableCell>
                                     <TableCell>{diary.writer}</TableCell>
                                     <TableCell>{diary.title}</TableCell>
-                                    <TableCell>{diary.content}</TableCell>
+                                    <TableCell>{diary.like}</TableCell>
                                 </tr>
                                 )
                             )
@@ -84,13 +97,13 @@ export const Button = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
     border: 1px solid black;
     border-radius: 50%;
     cursor: pointer;
     border: none;
-    background-color: skyblue;
+    background-color: tomato;
     font-weight: 700;
-    color: black;
     font-size: 30px;
 `;
 export default ListModal
