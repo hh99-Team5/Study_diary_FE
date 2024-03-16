@@ -9,16 +9,15 @@ import axios from "axios";
 import { useEffect } from "react";
 
 export const UserContext = createContext(null);
-
-
+const cookie = new Cookies();
+const jwtToken = cookie.get('jwtToken');
 const App =() => {
   const [userInfo, setUser] = useState({});
   useEffect(() => {
-    loginUser();
+    if(jwtToken){
+      loginUser();
+    }
   },[])
-
-  const cookie = new Cookies();
-  const jwtToken = cookie.get('jwtToken');
   const loginUser = async() => {
     const response = await axios.get("https://www.openmpy.com/api/v1/members",
     { headers:{'Authorization': jwtToken }})

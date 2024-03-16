@@ -28,8 +28,6 @@ import
 const ListModal = ({onClose}) => {
     // useContext를 통한 데이터 가져오기
     const {userInfo} = useContext(UserContext);
-    console.log("useContext = ", userInfo);
-
     // 리스트 필터링
     const [myList, setMyList] = useState([]);
 
