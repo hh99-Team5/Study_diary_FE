@@ -7,6 +7,7 @@ import { GoComment } from "react-icons/go";
 import Cookies from 'universal-cookie';
 import { useSwitch, useInput } from '../../hooks/userHooks';
 import { diaryUpdateMode } from './UpdateDiary';
+import Comment from './Comments';
 
 
 const Diary = () => {
@@ -195,6 +196,7 @@ const Diary = () => {
                 <span>좋아요 {diary.like}</span>
                 <GoComment />
                 <span>댓글 </span>
+                <Comment />
             </div>
             :
             <div></div>}
