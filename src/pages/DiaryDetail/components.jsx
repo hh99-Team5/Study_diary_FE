@@ -76,6 +76,12 @@ const Diary = () => {
 
     //좋아요 토글
     const handleToggleLike = async () => {
+        const loginUser = await diaryUpdateMode(userToken);
+        if (!loginUser || !loginUser.email) {
+            alert('로그인된 사용자 정보를 가져올 수 없습니다.');
+            return;
+        }
+
         setLiked(!liked);
         try {
             await axios.post(
@@ -144,15 +150,25 @@ const Diary = () => {
 
     const diaryChangeBtn = async () => {
         const loginUser = await diaryUpdateMode(userToken);
-        if (loginUser.email !== diary.writer) {
-            alert(`자신이 작성한 글만 수정 가능합니다.`)
-            return
+        if (!loginUser || !loginUser.email) {
+            alert('로그인된 사용자 정보를 가져올 수 없습니다.');
+            return;
         }
-        diaryModeHandler()
+    
+        if (loginUser.email !== diary.writer) {
+            alert(`자신이 작성한 글만 수정 가능합니다.`);
+            return;
+        }
+        diaryModeHandler();
     }
 
     const diaryUpdateBtn = async (mode) => {
         const loginUser = await diaryUpdateMode(userToken);
+        if (!loginUser || !loginUser.email) {
+            alert('로그인된 사용자 정보를 가져올 수 없습니다.');
+            return;
+        }
+        
         if (loginUser.email !== diary.writer) {
             alert(`자신이 작성한 글만 ${mode} 가능합니다.`)
             return
@@ -176,7 +192,7 @@ const Diary = () => {
                 <Title>{diary.title}</Title>
                 <TextHeader>
                     <span>{diary.writer}</span>
-                    {!diaryMode ?
+                    {!diaryMode ? 
                         <ButtonArea>
                             <Button border onClick={() => diaryChangeBtn()}>수정</Button>
                             <Button border onClick={() => diaryUpdateBtn("삭제")}>삭제</Button>
