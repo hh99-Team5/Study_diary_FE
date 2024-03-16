@@ -8,12 +8,26 @@ import Cookies from 'universal-cookie';
 import { useSwitch, useInput } from '../../hooks/userHooks';
 import { diaryUpdateMode } from './UpdateDiary';
 import Comment from './Comments';
+import {
+    TextAreaContainer,
+    MainContainer,
+    FooterAreaContainer,
+    ContentContainer,
+    Title,
+    TextHeader,
+    ButtonArea,
+    Button,
+    IconArea,
+    IconContainer,
+    IconText,
+    StyledTextarea
+} from './styles'
 
 
 const Diary = () => {
     // 남윤하 코드
-    const {state:diaryMode, handleState: diaryModeHandler} = useSwitch();
-    const {value:diaryContent, handler:diaryContentHandler, ref:diaryContentRef} = useInput();
+    const { state: diaryMode, handleState: diaryModeHandler } = useSwitch();
+    const { value: diaryContent, handler: diaryContentHandler, ref: diaryContentRef } = useInput();
     const nav = useNavigate();
     // 
 
@@ -80,35 +94,33 @@ const Diary = () => {
         fetchLikedStatus();
     }, [fetchLikedStatus, jwtToken, id]);
 
-
-
     // 남윤하 코드
     // 작성한 유저 체크 
-    let newDiary = diary ? {title: diary.title, contents: diaryContent} : null;
+    let newDiary = diary ? { title: diary.title, contents: diaryContent } : null;
 
     const token = cookie.get('jwtToken');
     const userToken = token ? token.replace("Bearer ", "") : null;
 
     // 남윤하 코드
     const diaryUpdateMutation = useMutation(
-        async(newData) => {
+        async (newData) => {
             try {
                 console.log("newData = ", newData);
                 const updateDiary = await axios.put(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}`,
-                newData, { headers:{'Authorization': `Bearer ${userToken}`}});
+                    newData, { headers: { 'Authorization': `Bearer ${userToken}` } });
                 console.log("updateDiary = ", updateDiary);
             } catch (error) {
                 console.log("updateDiary error =", error);
             }
         }, {
-            onSuccess: () => {
-                queryClient.invalidateQueries(["diary", id]);
-                alert("수정에 성공했습니다!");
-                diaryModeHandler()
-            },
-            onError: () => {
-                alert("수정에 실패 했습니다.");
-            }
+        onSuccess: () => {
+            queryClient.invalidateQueries(["diary", id]);
+            alert("수정에 성공했습니다!");
+            diaryModeHandler()
+        },
+        onError: () => {
+            alert("수정에 실패 했습니다.");
+        }
     })
 
     const diaryDeleteMutation = useMutation(
@@ -118,43 +130,40 @@ const Diary = () => {
                     Authorization: `${jwtToken}`
                 }
             })
-        },{
-            onSuccess: () =>{
-                queryClient.invalidateQueries("diaries");
-                nav("/diaryList");
-                alert("삭제 성공!");
-            },
-            onError: () => {
-                alert("삭제 실패!");
-            }
+        }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("diaries");
+            nav("/diaryList");
+            alert("삭제 성공!");
+        },
+        onError: () => {
+            alert("삭제 실패!");
         }
+    }
     )
-    
-    const diaryChangeBtn = async () =>{
+
+    const diaryChangeBtn = async () => {
         const loginUser = await diaryUpdateMode(userToken);
-        if(loginUser.email !== diary.writer) {
+        if (loginUser.email !== diary.writer) {
             alert(`자신이 작성한 글만 수정 가능합니다.`)
             return
-        } 
+        }
         diaryModeHandler()
     }
 
     const diaryUpdateBtn = async (mode) => {
         const loginUser = await diaryUpdateMode(userToken);
-        if(loginUser.email !== diary.writer) {
+        if (loginUser.email !== diary.writer) {
             alert(`자신이 작성한 글만 ${mode} 가능합니다.`)
             return
-        } 
-        if(mode === "수정"){
+        }
+        if (mode === "수정") {
             diaryUpdateMutation.mutate(newDiary);
         }
-        if(mode === "삭제"){
+        if (mode === "삭제") {
             diaryDeleteMutation.mutate(id);
         }
     }
-
-
-
 
     const LikeIcon = liked ? IoHeartSharp : IoHeartOutline;
 
@@ -162,45 +171,53 @@ const Diary = () => {
     if (isError) return <div>Error fetching diary</div>;
 
     return (
-        <div>
-            <div>
-                <p>{diary.title}</p>
-                <div>
+        <MainContainer>
+            <TextAreaContainer>
+                <Title>{diary.title}</Title>
+                <TextHeader>
                     <span>{diary.writer}</span>
+                    {!diaryMode ?
+                        <ButtonArea>
+                            <Button border onClick={() => diaryChangeBtn()}>수정</Button>
+                            <Button border onClick={() => diaryUpdateBtn("삭제")}>삭제</Button>
+                        </ButtonArea>
+                        :
+                        <ButtonArea>
+                            <Button border onClick={() => diaryUpdateBtn("수정")}>저장</Button>
+                            <Button border onClick={() => diaryModeHandler()}>취소</Button>
+                        </ButtonArea>
+                    }
+                </TextHeader>
+
                 {!diaryMode ?
-                    <>
-                        <button onClick={() => diaryChangeBtn()}>수정</button>
-                        <button onClick={() => diaryUpdateBtn("삭제")}>삭제</button>
-                    </>
-                    :
-                    <>
-                        <button onClick={() => diaryUpdateBtn("수정")}>저장</button>
-                        <button onClick={() => diaryModeHandler()}>취소</button>
-                    </>
-                }
-                </div>
-                
-                {!diaryMode ?
-                    <div style={{ border: "1px solid black", minHeight: "200px", overflowY: "auto" }}>
+                    <ContentContainer>
                         {diary.contents}
-                    </div>
+                    </ContentContainer>
                     :
-                    <div style={{ border: "1px solid black", minHeight: "200px", overflowY: "auto" }}>
-                        <textarea  cols="30" rows="10" onChange={diaryContentHandler} value={diaryContent} ></textarea>
-                    </div>
+                    <ContentContainer>
+                        <StyledTextarea 
+                        cols="30" rows="10" onChange={diaryContentHandler} value={diaryContent} >
+                        </StyledTextarea>
+                    </ContentContainer>
                 }
-            </div>
+            </TextAreaContainer>
             {!diaryMode ?
-            <div>
-                <LikeIcon onClick={handleToggleLike} />
-                <span>좋아요 {diary.like}</span>
-                <GoComment />
-                <span>댓글 </span>
-                <Comment />
-            </div>
-            :
-            <div></div>}
-        </div>
+                <FooterAreaContainer>
+                    <IconContainer>
+                        <IconArea>
+                            <LikeIcon onClick={handleToggleLike} />
+                            <IconText>좋아요 {diary.like}</IconText>
+                        </IconArea>
+                        <IconArea>
+                            <GoComment />
+                            <IconText>댓글 </IconText>
+                        </IconArea>
+                    </IconContainer>
+                    <Comment />
+                </FooterAreaContainer>
+                :
+                <div></div>}
+        </MainContainer>
     );
 
 }
