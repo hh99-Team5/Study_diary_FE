@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRef } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from 'react-redux';
+import Cookies from "universal-cookie";
 import 
 { 
   Container,
@@ -19,6 +20,8 @@ import
 
 
 const Diaries = () => {
+    const cookie = new Cookies();
+    const userToken = cookie.get('jwtToken');
     const user = useSelector((state) => state.user.value);
     console.log("redux user = ", user);
 
@@ -55,6 +58,9 @@ const Diaries = () => {
         { enabled: searched } // 검색을 했고 검색어가 공백이 아닌 경우에만 활성화
     );
 
+    
+
+
     const handleSearch = () => {
         const inputValue = keywordRef.current.value;
         setKeyword(inputValue);
@@ -82,7 +88,8 @@ const Diaries = () => {
         <Wrapper>
             <SelectArea selectRef={selectRef} keywordRef={keywordRef} handleSearch={handleSearch} />
             <ListArea dataToShow={dataToShow} handleDiaryClick={handleDiaryClick} />
-            <BtnArea nav={() =>nav("/add")} />
+            {userToken ? <BtnArea nav={() =>nav("/add")} /> : <></>}
+            
         </Wrapper>
       </Container>
     );
