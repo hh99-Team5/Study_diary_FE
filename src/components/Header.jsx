@@ -1,15 +1,14 @@
 import { AiTwotoneHome } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router";
-
+import axios from "axios";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../redux/modules/userSlice";
 import Cookies from "universal-cookie";
-import { useEffect } from "react";
 import ModalPortal from "./modals/Portal";
 import ListModal from "./modals/ListModal";
 import { useSwitch } from "../hooks/userHooks";
-import { useContext } from "react";
-import { UserContext } from "../App";
+import { useEffect } from "react";
 import 
     {
         HeaderBorder,
@@ -19,18 +18,35 @@ import
 
     
 const Header = () => {
+    const [userData, setUser] = useState({});
     const nav = useNavigate();
     const location = useLocation();
-    const cookie = new Cookies();
     const dispatch = useDispatch();
+    const cookie = new Cookies();
     const userToken = cookie.get('jwtToken');
     const {state, handleState} = useSwitch();
-    const {userInfo} = useContext(UserContext);
 
+    const fetchData = async() => {     
+        try {
+            const response = await axios.get(`https://www.openmpy.com/api/v1/members`, {headers: {Authorization: userToken}});
+            console.log("response.data.data = ", response.data.data);
+            setUser(response.data.data)
+        } catch (error) {
+            console.log("error = ", error)
+        }
+    }
+    // const {isLoading, isError, data:userData} = useQuery("user", fetchData)
+ 
+
+
+    useEffect(() => {
+        fetchData();
+    }, [location.pathname])
     // 홈 경로인 경우 null 반환
     if (location.pathname === "/") {
         return null;
     }
+    console.log("header data = ", userData);
 
     //로그아웃함수
     const onLogoutHandler = () => {
@@ -39,6 +55,7 @@ const Header = () => {
         alert("로그아웃 되었습니다.");
         nav("/");
     }
+
     return (
         <div>
             <HeaderDiv>
@@ -49,7 +66,7 @@ const Header = () => {
                     </div> 
                     : 
                     <div>
-                        {location.pathname === `/${userInfo.id}` ? <StyledSpan onClick={() => handleState()}>내가 쓴 글 확인</StyledSpan> : <StyledSpan onClick={() => nav(`/${userInfo.id}`)}>마이페이지</StyledSpan>}
+                        {location.pathname === `/${userData.id}` ? <StyledSpan onClick={() => handleState()}>내가 쓴 글 확인</StyledSpan> : <StyledSpan onClick={() => nav(`/${userData.id}`)}>마이페이지</StyledSpan>}
                         
                         <StyledSpan onClick={() => onLogoutHandler()}>로그아웃</StyledSpan>
                     </div>}
