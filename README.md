@@ -25,6 +25,7 @@
 - useEffect
 - useRef
 - useContext
+- useLocation
 
 ### CustomHooks
 
