@@ -12,6 +12,9 @@ const Header = () => {
     const cookie = new Cookies();
     const dispatch = useDispatch();
 
+    const userToken = cookie.get('jwtToken');
+
+
     // 홈 경로인 경우 null 반환
     if (location.pathname === "/") {
         return null;
@@ -30,10 +33,15 @@ const Header = () => {
         <div>
             <HeaderDiv>
                 <AiTwotoneHome size={30} style={{ cursor: 'pointer' }} onClick={() => { nav("/diaryList") }} />
-                <div>
-                    <StyledSpan >마이페이지</StyledSpan>
-                    <StyledSpan onClick={() => onLogoutHandler()}>로그아웃</StyledSpan>
-                </div>
+                    {!userToken ? 
+                    <div>
+                        <StyledSpan onClick={() => nav("/")} >로그인 하기</StyledSpan> 
+                    </div> 
+                    : 
+                    <div>
+                        <StyledSpan >마이페이지</StyledSpan>
+                        <StyledSpan onClick={() => onLogoutHandler()}>로그아웃</StyledSpan>
+                    </div>}
             </HeaderDiv>
             <HeaderBorder />
 
