@@ -42,7 +42,7 @@ const AddDiary = () => {
   const addDiaryMutation = useMutation(
     async (newData) => {
       try {
-        const response = await axios.post("http://hanghae-5.ap-northeast-2.elasticbeanstalk.com/api/v1/articles", newData,
+        const response = await axios.post("https://www.openmpy.com/api/v1/articles", newData,
           { headers: { 'Authorization': `Bearer ${userToken}` } })
         console.log("response = ", response);
       } catch (error) {
