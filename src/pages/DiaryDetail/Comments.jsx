@@ -4,6 +4,16 @@ import { useQuery, useQueryClient } from 'react-query';
 import { diaryUpdateMode } from './UpdateDiary';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import {
+    CommentContainer,
+    Button,
+    ButtonArea,
+    CommentHeader,
+    CommentHeaderRight,
+    MiddleText,
+    CommentText,
+    StyledTextarea
+} from './styles'
 
 const Comment = () => {
     const queryClient = useQueryClient();
@@ -21,7 +31,7 @@ const Comment = () => {
     // 로그인 유저 확인 코드
     const fetchLoginUser = async () => {
         const token = cookie.get('jwtToken');
-        const userToken = token ? token.replace("Bearer ", "") : null;
+        const userToken = token ? token.replace("Bearer ", "") : '';
         if (userToken) {
             const user = await diaryUpdateMode(userToken);
             return user;
@@ -60,6 +70,10 @@ const Comment = () => {
     // 댓글 작성 핸들
     const handleSubmitComment = async (e) => {
         e.preventDefault();
+        if (!loginUser) {
+            alert('댓글을 작성하려면 먼저 로그인해야 합니다.');
+            return;
+        }
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/api/v1/articles/${id}/comments`,
@@ -129,58 +143,61 @@ const Comment = () => {
     };
 
     return (
-        <div>
+        <CommentContainer>
             {/* 댓글 목록 map 함수 */}
             {isLoading && <div>Loading comments...</div>}
             {isError && <div>Error fetching comments</div>}
             <div>
                 {comments ? comments.map((comment) => (
-                    // null 또는 undefined인 경우 건너뛰기
-
-                        <div key={comment.id}>
-                            {editableCommentId === comment.id ? (
-                                <form onSubmit={(e) => handleUpdateComment(e, comment.id)}>
-                                    <textarea
-                                        value={updateComment}
-                                        onChange={(e) => setUpdateComment(e.target.value)}
-                                        rows="4"
-                                        cols="50"
-                                        placeholder="댓글을 입력하세요"
-                                    ></textarea>
-                                    <br />
-                                    <button type="submit">댓글 수정 완료</button>
-                                </form>
-                            ) : (
-                                <div key={comment.id}>
-                                    <p>{comment.contents}</p>
+                    <div key={comment.id}>
+                        {editableCommentId === comment.id ? (
+                            <form onSubmit={(e) => handleUpdateComment(e, comment.id)}>
+                                <StyledTextarea border
+                                    value={updateComment}
+                                    onChange={(e) => setUpdateComment(e.target.value)}
+                                    rows="4"
+                                    cols="50"
+                                    placeholder="댓글을 입력하세요"
+                                ></StyledTextarea>
+                                <ButtonArea>
+                                    <Button type="submit">완료</Button>
+                                </ButtonArea>
+                            </form>
+                        ) : (
+                            <div key={comment.id}>
+                                <CommentHeader>
                                     <span>{comment.writer}</span>
-                                    <span>{comment.createdAt}</span>
-                                    {comment.writer === loginUser.email && (
-                                        <>
-                                            <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
-                                            <button onClick={() => setEditableCommentId(comment.id)}>수정</button>
-                                        </>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    
+                                    <CommentHeaderRight>
+                                        <MiddleText>{comment.createdAt}</MiddleText>
+                                        {loginUser && comment.writer === loginUser.email && (
+                                            <ButtonArea>
+                                                <Button onClick={() => setEditableCommentId(comment.id)}>수정</Button>
+                                                <Button onClick={() => handleDeleteComment(comment.id)}>삭제</Button>
+                                            </ButtonArea>
+                                        )}
+                                    </CommentHeaderRight>
+                                </CommentHeader>
+                                <CommentText>{comment.contents}</CommentText>
+                            </div>
+                        )}
+                    </div>
                 )) : null}
             </div>
 
             {/* 댓글 작성 폼 */}
             <form onSubmit={handleSubmitComment}>
-                <textarea
+                <StyledTextarea border
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     rows="4"
                     cols="50"
                     placeholder="댓글을 입력하세요"
-                ></textarea>
-                <br />
-                <button type="submit">댓글 작성</button>
+                ></StyledTextarea>
+                <ButtonArea>
+                    <Button border type="submit">등록</Button>
+                </ButtonArea>
             </form>
-        </div>
+        </CommentContainer>
     );
 };
 
