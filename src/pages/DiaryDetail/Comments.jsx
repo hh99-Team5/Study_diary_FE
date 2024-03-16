@@ -134,9 +134,9 @@ const Comment = () => {
             {isLoading && <div>Loading comments...</div>}
             {isError && <div>Error fetching comments</div>}
             <div>
-                {comments.map((comment) => (
+                {comments ? comments.map((comment) => (
                     // null 또는 undefined인 경우 건너뛰기
-                    comment.id ? (
+
                         <div key={comment.id}>
                             {editableCommentId === comment.id ? (
                                 <form onSubmit={(e) => handleUpdateComment(e, comment.id)}>
@@ -164,8 +164,8 @@ const Comment = () => {
                                 </div>
                             )}
                         </div>
-                    ) : null
-                ))}
+                    
+                )) : null}
             </div>
 
             {/* 댓글 작성 폼 */}
