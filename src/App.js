@@ -4,20 +4,30 @@ import './reset.css';
 import Router from "./shared/Router";
 import { createContext } from "react";
 import Cookies from "universal-cookie";
-import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 export const UserContext = createContext(null);
 
 
 const App =() => {
+  const [userInfo, setUser] = useState({});
+  useEffect(() => {
+    loginUser();
+  },[])
+
   const cookie = new Cookies();
-  const userToken = cookie.get('jwtToken');
-  console.log("userToken = ", userToken);
-  let loginUser = {};
-  if(userToken){
-    loginUser = jwtDecode(userToken);
+  const jwtToken = cookie.get('jwtToken');
+  const loginUser = async() => {
+    const response = await axios.get("https://www.openmpy.com/api/v1/members",
+    { headers:{'Authorization': jwtToken }})
+    setUser(response.data.data);
   }
-  const userInfo = loginUser;
+
+  if(userInfo){
+    console.log("user = ", userInfo);
+  }
   
   const queryClient = new QueryClient();
   return (
