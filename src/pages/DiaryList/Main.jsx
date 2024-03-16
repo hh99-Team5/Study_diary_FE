@@ -92,7 +92,6 @@ const Diaries = () => {
             <SelectArea selectRef={selectRef} keywordRef={keywordRef} handleSearch={handleSearch} />
             <ListArea dataToShow={dataToShow} handleDiaryClick={handleDiaryClick} />
             {userToken ? <BtnArea nav={() =>nav("/add")} /> : <></>}
-            
         </Wrapper>
       </Container>
     );
