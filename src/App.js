@@ -12,8 +12,13 @@ export const UserContext = createContext(null);
 const App =() => {
   const cookie = new Cookies();
   const userToken = cookie.get('jwtToken');
-  const loginUser = jwtDecode(userToken);
+  console.log("userToken = ", userToken);
+  let loginUser = {};
+  if(userToken){
+    loginUser = jwtDecode(userToken);
+  }
   const userInfo = loginUser;
+  
   const queryClient = new QueryClient();
   return (
     <UserContext.Provider value={{userInfo}}>
