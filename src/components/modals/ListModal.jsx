@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useQuery } from 'react-query'
 import { Background, Content } from './styles'
 import { useState } from 'react'
+
 import { 
     DiaryList,
     Tbody,
@@ -17,15 +18,18 @@ import Cookies from 'universal-cookie'
 
 
 import styled from 'styled-components'
+import { UserContext } from '../../App'
+import { useContext } from 'react'
 
 const ListModal = ({onClose}) => {
     const cookie = new Cookies()
     const userToken = cookie.get('jwtToken');
     const decodeToken = jwtDecode(userToken);
-
     console.log("decodeToken = ", decodeToken.sub);
-
     const loginUserEmail = decodeToken.sub;
+
+    const {userInfo} = useContext(UserContext);
+    console.log("useContext = ", userInfo);
 
     console.log("loginUserEmail type = ", typeof loginUserEmail );
     const [myList, setMyList] = useState([]);
