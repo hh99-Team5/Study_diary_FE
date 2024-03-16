@@ -84,7 +84,6 @@ const Mypage = () => {
     //         console.error('Error changing password:', error);
     //     }
     // };
-
     return (
       <Wrapper>
       <Container>
@@ -112,7 +111,6 @@ const LoginInfo = styled.div`
     width: 300px;
     height: 40px;
 `
-
 const Input = styled.input`
   height: 30px;
   padding: 0 10px;
