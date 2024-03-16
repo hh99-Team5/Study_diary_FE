@@ -12,7 +12,8 @@ import {
     CommentHeaderRight,
     MiddleText,
     CommentText,
-    StyledTextarea
+    StyledTextarea,
+    ScrollableContainer
 } from './styles'
 
 const Comment = () => {
@@ -143,11 +144,11 @@ const Comment = () => {
     };
 
     return (
-        <CommentContainer>
+        <div>
             {/* 댓글 목록 map 함수 */}
             {isLoading && <div>Loading comments...</div>}
             {isError && <div>Error fetching comments</div>}
-            <div>
+            <ScrollableContainer>
                 {comments ? comments.map((comment) => (
                     <div key={comment.id}>
                         {editableCommentId === comment.id ? (
@@ -182,7 +183,7 @@ const Comment = () => {
                         )}
                     </div>
                 )) : null}
-            </div>
+            </ScrollableContainer>
 
             {/* 댓글 작성 폼 */}
             <form onSubmit={handleSubmitComment}>
@@ -197,7 +198,7 @@ const Comment = () => {
                     <Button border type="submit">등록</Button>
                 </ButtonArea>
             </form>
-        </CommentContainer>
+        </div>
     );
 };
 
