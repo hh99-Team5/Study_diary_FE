@@ -26,7 +26,7 @@ const Diaries = () => {
     // console.log("redux user = ", user);
 
     //검색조건, 검색어, 검색상태 관리
-    const [type, setType] = useState('');
+    const [type, setType] = useState('writer');
     const [keyword, setKeyword] = useState('');
     const [searched, setSearched] = useState(false);
     const keywordRef = useRef(null);
@@ -62,7 +62,12 @@ const Diaries = () => {
         const inputValue = keywordRef.current.value;
         setKeyword(inputValue);
         setType(selectRef.current.value);
-        setSearched(true);
+        if(!keyword){
+            setSearched(false);
+        }else {
+
+            setSearched(true);
+        }
     }
 
     useEffect(() => {

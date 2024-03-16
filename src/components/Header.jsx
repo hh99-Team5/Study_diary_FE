@@ -26,9 +26,6 @@ const Header = () => {
     const userToken = cookie.get('jwtToken');
     const {state, handleState} = useSwitch();
     const {userInfo} = useContext(UserContext);
-    useEffect(() => {
-    // searchUser();
-    },[location.pathname])
 
     // 홈 경로인 경우 null 반환
     if (location.pathname === "/") {
