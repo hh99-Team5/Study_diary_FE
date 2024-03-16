@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../redux/modules/userSlice";
 import Cookies from "universal-cookie";
-
+import axios from "axios";
 
 const Header = () => {
     const nav = useNavigate();
@@ -15,6 +15,26 @@ const Header = () => {
     const userToken = cookie.get('jwtToken');
 
 
+    const searchUser = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/v1/members`,
+                {
+                    headers: {
+                        'Authorization': `${userToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            console.log("response = ", response.data.data)
+            return response
+        } catch (error) {
+            console.error('Error fetching liked status:', error);
+        }
+    };
+    
+    
+    if(userToken){
+        console.log("searchUser = ", searchUser());
+    }
     // 홈 경로인 경우 null 반환
     if (location.pathname === "/") {
         return null;
