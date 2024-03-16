@@ -2,12 +2,13 @@ import styled from "styled-components";
 
 export const MainContainer = styled.div`
     width: 100%;
-    height: auto;
+    height: 90vh;
     position: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    overflow-y: auto;
 `;
 
 export const TextAreaContainer = styled.div`
