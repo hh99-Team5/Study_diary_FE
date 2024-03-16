@@ -16,7 +16,9 @@ export const Background = styled.div`
 export const Content = styled.div`
   height: 90%;
   width: 600px;
+  width: ${(props) => !props.width ? "600px" : props.width};
   border-radius: 10%;
+  border-radius: ${(props) => props.radius ? props.radius : "10%"};
   border: 3px solid black;
   display: flex;
   justify-content: center;
@@ -24,3 +26,4 @@ export const Content = styled.div`
   position: relative;
   background: white;
 `;
+

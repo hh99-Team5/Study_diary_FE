@@ -23,7 +23,7 @@ const Diaries = () => {
     const cookie = new Cookies();
     const userToken = cookie.get('jwtToken');
     const user = useSelector((state) => state.user.value);
-    console.log("redux user = ", user);
+    // console.log("redux user = ", user);
 
     //검색조건, 검색어, 검색상태 관리
     const [type, setType] = useState('');
@@ -72,7 +72,8 @@ const Diaries = () => {
         if (Array.isArray(searchResults) && searchResults.length === 0 && !isLoadingSearchResults) {
             alert('검색 결과가 없습니다.');
         }
-    }, [searchResults, isLoadingSearchResults]);
+    }, []);
+    
 
     if (isLoadingDiaries || isLoadingSearchResults) return <div>Loading...</div>;
     if (isErrorDiaries || isErrorSearchResults) return <div>로딩 중 오류 발생</div>;

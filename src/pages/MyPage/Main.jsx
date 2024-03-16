@@ -15,6 +15,7 @@ import
         Container 
     } from '../../components/styles'
 
+
 const Mypage = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -22,6 +23,8 @@ const Mypage = () => {
     const jwtToken = cookie.get("jwtToken");
     const [logUser, setUser] = useState({});
     const [newPassword1, setNewPassword1] = useState('');
+
+
 
     // const [newPassword2, setNewPassword2] = useState('');
     // const [isSamePw, setIsSamePw] = useState('false');
@@ -42,8 +45,9 @@ const Mypage = () => {
                         'Content-Type': 'application/json'
                     }
                 });
-
-            if(id !== response.data.data.id) {
+                console.log("id = ", +id);
+                console.log("response.data.data.id = ", response.data.data.id);
+            if(+id !== response.data.data.id) {
                 navigate("/diaryList");
                 alert("접근이 불가능 합니다");
             }
@@ -53,7 +57,11 @@ const Mypage = () => {
         }
     };
 
-    searchUser();
+    // 무한 리렌더링 방지 > 추후에 memoization 사용해보기
+    useEffect(() => {
+        searchUser()
+    }, [])
+    
 
     // const oncheckPw = async () => {
     //     if (newPassword1 !== newPassword2) {

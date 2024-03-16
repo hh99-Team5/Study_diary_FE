@@ -5,15 +5,24 @@ import { useDispatch } from "react-redux";
 import { logoutUser } from "../redux/modules/userSlice";
 import Cookies from "universal-cookie";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import ModalPortal from "./modals/Portal";
+import ListModal from "./modals/ListModal";
+import { useSwitch } from "../hooks/userHooks";
 
 const Header = () => {
     const nav = useNavigate();
     const location = useLocation();
     const cookie = new Cookies();
     const dispatch = useDispatch();
-
+    const [loginUser, setUser] = useState({})
     const userToken = cookie.get('jwtToken');
+    const {state, handleState} = useSwitch();
 
+    useEffect(() => {
+        searchUser();
+        
+    },[location.pathname])
 
     const searchUser = async () => {
         try {
@@ -24,16 +33,16 @@ const Header = () => {
                         'Content-Type': 'application/json'
                     }
                 });
-            console.log("response = ", response.data.data)
-            return response
+                setUser(response.data.data);
+                console.log("Header loginUser =", loginUser)
+            return response.data.data
         } catch (error) {
             console.error('Error fetching liked status:', error);
         }
     };
     
-    
     if(userToken){
-        console.log("searchUser = ", searchUser());
+        
     }
     // 홈 경로인 경우 null 반환
     if (location.pathname === "/") {
@@ -47,8 +56,6 @@ const Header = () => {
         alert("로그아웃 되었습니다.");
         nav("/");
     }
-
-
     return (
         <div>
             <HeaderDiv>
@@ -59,11 +66,15 @@ const Header = () => {
                     </div> 
                     : 
                     <div>
-                        <StyledSpan >마이페이지</StyledSpan>
+                        {location.pathname === `/${loginUser.id}` ? <StyledSpan onClick={() => handleState()}>내가 쓴 글 확인</StyledSpan> : <StyledSpan onClick={() => nav(`/${loginUser.id}`)}>마이페이지</StyledSpan>}
+                        
                         <StyledSpan onClick={() => onLogoutHandler()}>로그아웃</StyledSpan>
                     </div>}
             </HeaderDiv>
             <HeaderBorder />
+            <ModalPortal> 
+                {state ?  <ListModal onClose={handleState} /> : null }
+            </ModalPortal>
 
         </div>
     )
