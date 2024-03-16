@@ -19,7 +19,14 @@
 12. json-server
 13. yarn add global react-scripts
 
-## CustomHooks
+## 사용한 Hook
+
+- useState
+- useEffecy
+- useRef
+- useContext
+
+### CustomHooks
 
 - useInput: 입력값 저장과, ref를 통한 요소 조회 (yunha)
 - useSwitch: state의 상태값 변화주기, modal 열기 닫기에 적용 (yunha)
