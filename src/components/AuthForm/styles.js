@@ -49,3 +49,20 @@ export const FormButtonArea = styled.div`
     gap: 10%;
     height: 20%;
 `;
+
+export const HeaderBorder = styled.div`
+    width: 100%;
+    height: 3px;
+    border-bottom: 1px solid gray;
+`;
+
+export const StyledSpan = styled.span`
+    cursor: pointer;
+    margin-left: 10px;
+`;
+
+export const HeaderDiv = styled.div`
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+`;
