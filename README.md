@@ -22,7 +22,7 @@
 ## 사용한 Hook
 
 - useState
-- useEffecy
+- useEffect
 - useRef
 - useContext
 
