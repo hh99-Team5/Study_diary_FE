@@ -17,7 +17,7 @@ export const SelectArea = ({selectRef, keywordRef, handleSearch}) => {
             <Select ref={selectRef}>
                 <option value="writer">작성자</option>
                 <option value="title">제목</option>
-                <option value="content">내용</option>
+                <option value="contents">내용</option>
             </Select>
             <Input type="text" ref={keywordRef} />
             <div><Button onClick={handleSearch}>검색</Button></div>
