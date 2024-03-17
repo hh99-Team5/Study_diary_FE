@@ -45,6 +45,18 @@
 - oncheckPwInvalidation (yunha)
 - onSubmitInvalidation (yunha)
 
+### Api (Yunha)
+
+- memberApi, ListApi, CommentAPi
+
+#### MemberService.js
+
+- memberLogin, emailDuplicateCheck, registerMember, searchMember, updateMember, memberDiaries
+
+#### ArticleService.js
+
+#### CommentService.js
+
 ## Modal
 
 - UserModal: 회원가입 로그인 (yunha)
