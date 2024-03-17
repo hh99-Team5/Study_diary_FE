@@ -1,15 +1,20 @@
 import React from "react";
 import styled from "styled-components";
+import { Button } from "../../pages/DiaryDetail/styles";
 
-const AlertModal = ({ onClose}) => {
-
+const AlertModal = ({ onClose, message }) => {
   return (
-      <Background>
-        <Content>
-            <h1>Modal입니다.</h1>
-         </ Content>
-         {/* 실제로 나올 것은 이 Content 부분 */}
-      </Background>
+    <Background>
+      <Content>
+        <Separator />
+        <TextContainer>
+          <h1>{message}</h1>
+        </TextContainer>
+        <ButtonContainer>
+          <Button border onClick={onClose}>닫기</Button>
+        </ButtonContainer>
+      </Content>
+    </Background>
   );
 };
 
@@ -25,14 +30,39 @@ const Background = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
 `;
 
 const Content = styled.div`
-  height: 100%;
-  width: 950px;
-  margin-top: 70px;
+  height: 200px;
+  width: 300px;
   position: relative;
-  overflow: scroll;
-  background: #141414;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Separator = styled.div`
+  width: 100%;
+  height: 5px;
+  background-color: transparent;
+  border-bottom: 1px dashed #ced4da;
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 0.85;
+`;
+
+const ButtonContainer = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
