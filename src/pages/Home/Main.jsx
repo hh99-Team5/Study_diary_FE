@@ -49,13 +49,13 @@ const Main = () => {
     return (
         <Wrapper>
             <Container>
-                <Icon>
-                    <FontAwesomeIcon style={{width: "90%", height: "90%"}} icon={faUserCircle} size="3x" color="black" />
+                <Icon color={"#3a75ed"}>
+                    <FontAwesomeIcon style={{width: "90%", height: "90%"}} icon={faUserCircle} size="3x"/>
                 </Icon>
                 <SelectArea>
-                    <LargeButton onClick={() => onModalHandler("LOGIN")}>로그인</LargeButton>
-                    <LargeButton onClick={() => onModalHandler("REGISTER")}>회원가입</LargeButton>
-                    <LargeButton onClick={() => navigate('/diaryList')}>비회원</LargeButton>
+                    <LargeButton color={"#3a75ed"} onClick={() => onModalHandler("LOGIN")}>로그인</LargeButton>
+                    <LargeButton color={"#3a75ed"} onClick={() => onModalHandler("REGISTER")}>회원가입</LargeButton>
+                    <LargeButton color={"#3a75ed"} onClick={() => navigate('/diaryList')}>비회원</LargeButton>
                 </SelectArea>
                 <ModalPortal>
                     {modalOn && <UserModal mode={mode} onClose={handleModal} />}
