@@ -20,14 +20,17 @@ export const userLoginCall = async (user) => {
         throw error; // 에러를 상위로 전파
     }
 }
+
 // 2. 유효성검사
-export const userLoginValidation = async(username, password) => {
+export const userLoginValidation = async(username, password, setModalMessage, setShowErrorModal) => {
     if(!username) {
-        alert("이메일을 입력해주세요");
+        setModalMessage("이메일을 입력해주세요");
+        setShowErrorModal(true);
         return false
     }
     if(!password) {
-        alert("비밀번호를 입력해주세요");
+        setModalMessage("비밀번호를 입력해주세요");
+        setShowErrorModal(true);
         return false
     }  
     return true
