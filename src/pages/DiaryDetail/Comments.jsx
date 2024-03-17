@@ -5,7 +5,6 @@ import { diaryUpdateMode } from './UpdateDiary';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import {
-    CommentContainer,
     Button,
     ButtonArea,
     CommentHeader,
@@ -15,6 +14,7 @@ import {
     StyledTextarea,
     ScrollableContainer
 } from './styles'
+import AlertModal from '../../components/modals/AlertModal';
 
 const Comment = () => {
     const queryClient = useQueryClient();
@@ -23,6 +23,9 @@ const Comment = () => {
     const [updateComment, setUpdateComment] = useState('');
     const [editableCommentId, setEditableCommentId] = useState(null);
     const [loginUser, setLoginUser] = useState(null);
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     // D.Detail-components 코드에도 동일하게 포함된 부분
     const { id } = useParams();
@@ -72,7 +75,8 @@ const Comment = () => {
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         if (!loginUser) {
-            alert('댓글을 작성하려면 먼저 로그인해야 합니다.');
+            setModalMessage("로그인한 유저만 댓글 작성이 가능합니다.");
+            setShowErrorModal(true);
             return;
         }
         try {
@@ -143,6 +147,10 @@ const Comment = () => {
         }
     };
 
+    const closeModal = () => {
+        setShowErrorModal(false);
+    };
+
     return (
         <div>
             {/* 댓글 목록 map 함수 */}
@@ -198,6 +206,8 @@ const Comment = () => {
                     <Button border type="submit">등록</Button>
                 </ButtonArea>
             </form>
+
+            {showErrorModal && <AlertModal onClose={closeModal} message={modalMessage} />}
         </div>
     );
 };
