@@ -14,29 +14,45 @@ export const Button = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid ${(props) => props.color ? props.color : "black"};
+    color: ${(props) => props.color ? props.color : "black"};
+    transition: color 0.2s linear; /* 아이콘 색상 변경에 대한 트랜지션 */
     border-radius: 15px;
     cursor: pointer;
+    &:hover {
+        background-color: ${(props) =>props.color ? props.color : "black"};
+        color : white;
+        border: none;
+    }
+`;
+export const Icon = styled.div`
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:  ${(props) => props.color ? props.color : "black"};
+    transition: color 0.2s linear; /* 아이콘 색상 변경에 대한 트랜지션 */
 `;
 
 export const LargeButton = styled.div`
     width: 300px;
     height: 40px;
-    border: 1px solid black;
+    border: 1px solid ${(props) => props.color ? props.color : "black"};
+    color: ${(props) => props.color ? props.color : "black"};
     font-weight: 700;
     border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: background-color 0.2s linear; /* 배경색 변경에 대한 트랜지션 */
+    &:hover {
+        background-color: ${(props) =>props.color ? props.color : "black"};
+        color : white;
+        border: none;
+    }
 `;
 
-export const Icon = styled.div`
-    height: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
 
 export const SelectArea = styled.div`
 display: flex;
