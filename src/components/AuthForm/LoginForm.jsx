@@ -6,8 +6,6 @@ import { userLoginCall, userLoginValidation } from './Functions/LoginFunctions';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../redux/modules/userSlice';
 import { Button } from '../styles';
-
-
 import 
     { 
     Input, 
@@ -20,9 +18,7 @@ import
     FormButtonArea,
     } 
 from './styles';
-
-
-
+import AlertModal from '../../components/modals/AlertModal';
 
 const LoginForm = ({ onClose }) => {
     const { value: username, handler: onEmailChangeHandler, ref: usernameRef } = useInput();
@@ -30,6 +26,9 @@ const LoginForm = ({ onClose }) => {
     const [user, setUser] = useState({});
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
     
     useEffect(() => {
         usernameRef.current.focus();
@@ -41,24 +40,30 @@ const LoginForm = ({ onClose }) => {
     const userLogin = async () => {
         try {
             const response = await userLoginCall(user);
-            alert(response.data.message);
+            setModalMessage(response.data.message);
+            setShowErrorModal(true);
             const userData = { email: user.username, position: "member" };
             if (response.status === 200) {
                 dispatch(loginUser(userData));
                 navigate("/diaryList");
             }
         } catch (error) {
-            alert("로그인 실패!");
+            setModalMessage("로그인 실패!");
+            setShowErrorModal(true);
         }
     }
 
     const onSubmitHandler = async () => {
-        if (userLoginValidation(username, password)) {
+        if (userLoginValidation(username, password, setModalMessage, setShowErrorModal)) {
             setUser({ username, password });
         } else {
             return;
         }
     }
+
+    const closeModal = () => {
+        setShowErrorModal(false);
+    };
 
     return (
         <Wrapper>
@@ -81,6 +86,8 @@ const LoginForm = ({ onClose }) => {
                     <Button onClick={onClose}>취소</Button>
                 </FormButtonArea>
             </Form>
+
+            {showErrorModal && <AlertModal onClose={closeModal} message={modalMessage} />}
         </Wrapper>
     );
 }
