@@ -16,17 +16,22 @@ import
         SelectArea,
         Container 
     } from '../../components/styles'
-    
+import AlertModal from '../../components/modals/AlertModal';
+
 const Main = () => {
     const user = useSelector((state) => state.user.value);
-    const nav = useNavigate();
+    const navigate = useNavigate();
     const cookie = new Cookies();
     const jwtToken = cookie.get('jwtToken')
+    
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
+
     console.log("redux user = ", user);
     useEffect(() => {
         if(jwtToken){
-            alert('이미 로그인 된 유저입니다.')
-            nav("/diaryList")
+            setModalMessage("이미 로그인 된 유저입니다");
+            setShowErrorModal(true);
         }
     }, [])
     const { state: modalOn, handleState: handleModal } = useSwitch();
@@ -35,6 +40,12 @@ const Main = () => {
         setMode(mod);
         handleModal();
     }
+
+    const closeModal = () => {
+        setShowErrorModal(false);
+        navigate("/diaryList");
+    };
+
     return (
         <Wrapper>
             <Container>
@@ -44,14 +55,15 @@ const Main = () => {
                 <SelectArea>
                     <LargeButton onClick={() => onModalHandler("LOGIN")}>로그인</LargeButton>
                     <LargeButton onClick={() => onModalHandler("REGISTER")}>회원가입</LargeButton>
-                    <LargeButton onClick={() => nav('/diaryList')}>비회원</LargeButton>
+                    <LargeButton onClick={() => navigate('/diaryList')}>비회원</LargeButton>
                 </SelectArea>
                 <ModalPortal>
                     {modalOn && <UserModal mode={mode} onClose={handleModal} />}
                 </ModalPortal>
             </Container>
+
+            {showErrorModal && <AlertModal onClose={closeModal} message={modalMessage} />}
         </Wrapper>
-        
     )
 }
 
