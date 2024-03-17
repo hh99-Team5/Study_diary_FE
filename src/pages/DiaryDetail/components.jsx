@@ -22,13 +22,14 @@ import {
     IconText,
     StyledTextarea
 } from './styles'
+import AlertModal from '../../components/modals/AlertModal';
 
 
 const Diary = () => {
     // 남윤하 코드
     const { state: diaryMode, handleState: diaryModeHandler } = useSwitch();
     const { value: diaryContent, handler: diaryContentHandler, ref: diaryContentRef } = useInput();
-    const nav = useNavigate();
+    const navigate = useNavigate();
     // 
 
     const { id } = useParams();
@@ -36,6 +37,11 @@ const Diary = () => {
     const [liked, setLiked] = useState(false);
     const cookie = new Cookies();
     const jwtToken = cookie.get("jwtToken");
+
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showSuccessDeleteModal, setShowSuccessDeleteModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     const { isLoading, isError, data: diary } = useQuery(
         ["diary", id],
@@ -101,7 +107,7 @@ const Diary = () => {
     }, [fetchLikedStatus, jwtToken, id]);
 
     // 남윤하 코드
-    // 작성한 유저 체크 
+    // 작성한 유저 체크
     let newDiary = diary ? { title: diary.title, contents: diaryContent } : null;
 
     const token = cookie.get('jwtToken');
@@ -121,11 +127,13 @@ const Diary = () => {
         }, {
         onSuccess: () => {
             queryClient.invalidateQueries(["diary", id]);
-            alert("수정에 성공했습니다!");
+            setModalMessage("수정에 성공했습니다!");
+            setShowSuccessModal(true);
             diaryModeHandler()
         },
         onError: () => {
-            alert("수정에 실패 했습니다.");
+            setModalMessage("수정에 실패 했습니다.");
+            setShowErrorModal(true);
         }
     })
 
@@ -139,11 +147,12 @@ const Diary = () => {
         }, {
         onSuccess: () => {
             queryClient.invalidateQueries("diaries");
-            nav("/diaryList");
-            alert("삭제 성공!");
+            setModalMessage("삭제 성공!");
+            setShowSuccessDeleteModal(true);
         },
         onError: () => {
-            alert("삭제 실패!");
+            setModalMessage("삭제 실패");
+            setShowErrorModal(true);
         }
     }
     )
@@ -151,12 +160,14 @@ const Diary = () => {
     const diaryChangeBtn = async () => {
         const loginUser = await diaryUpdateMode(userToken);
         if (!loginUser || !loginUser.email) {
-            alert('로그인된 사용자 정보를 가져올 수 없습니다.');
+            setModalMessage("로그인된 사용자 정보를 가져올 수 없습니다.");
+            setShowErrorModal(true);
             return;
         }
-    
+
         if (loginUser.email !== diary.writer) {
-            alert(`자신이 작성한 글만 수정 가능합니다.`);
+            setModalMessage("자신이 작성한 글만 수정 가능합니다.");
+            setShowErrorModal(true);
             return;
         }
         diaryModeHandler();
@@ -165,13 +176,15 @@ const Diary = () => {
     const diaryUpdateBtn = async (mode) => {
         const loginUser = await diaryUpdateMode(userToken);
         if (!loginUser || !loginUser.email) {
-            alert('로그인된 사용자 정보를 가져올 수 없습니다.');
+            setModalMessage("로그인된 사용자 정보를 가져올 수 없습니다.");
+            setShowErrorModal(true);
             return;
         }
-        
+
         if (loginUser.email !== diary.writer) {
-            alert(`자신이 작성한 글만 ${mode} 가능합니다.`)
-            return
+            setModalMessage("자신이 작성한 글만 삭제 가능합니다.");
+            setShowErrorModal(true);
+            return;
         }
         if (mode === "수정") {
             diaryUpdateMutation.mutate(newDiary);
@@ -180,6 +193,17 @@ const Diary = () => {
             diaryDeleteMutation.mutate(id);
         }
     }
+
+    const closeModal = () => {
+        setShowErrorModal(false);
+        setShowSuccessModal(false);
+        setShowSuccessDeleteModal(false);
+    };
+
+    const handleSuccessModalClose = () => {
+        setShowSuccessDeleteModal(false);
+        navigate("/diaryList");
+    };
 
     const LikeIcon = liked ? IoHeartSharp : IoHeartOutline;
 
@@ -192,7 +216,7 @@ const Diary = () => {
                 <Title>{diary.title}</Title>
                 <TextHeader>
                     <span>{diary.writer}</span>
-                    {!diaryMode ? 
+                    {!diaryMode ?
                         <ButtonArea>
                             <Button border onClick={() => diaryChangeBtn()}>수정</Button>
                             <Button border onClick={() => diaryUpdateBtn("삭제")}>삭제</Button>
@@ -211,8 +235,8 @@ const Diary = () => {
                     </ContentContainer>
                     :
                     <ContentContainer>
-                        <StyledTextarea 
-                        cols="30" rows="10" onChange={diaryContentHandler} value={diaryContent} >
+                        <StyledTextarea
+                            cols="30" rows="10" onChange={diaryContentHandler} value={diaryContent} >
                         </StyledTextarea>
                     </ContentContainer>
                 }
@@ -233,6 +257,10 @@ const Diary = () => {
                 </FooterAreaContainer>
                 :
                 <div></div>}
+
+            {showSuccessModal && <AlertModal onClose={closeModal} message={modalMessage} />}
+            {showErrorModal && <AlertModal onClose={closeModal} message={modalMessage} />}
+            {showSuccessDeleteModal && <AlertModal onClose={handleSuccessModalClose} message={modalMessage} />}
         </MainContainer>
     );
 
