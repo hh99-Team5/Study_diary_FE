@@ -1,19 +1,18 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Cookies from 'universal-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router';
-import 
-    { 
-        LargeButton, 
-        Icon, 
-        Wrapper,
-        SelectArea,
-        Container 
-    } from '../../components/styles'
+import {
+    LargeButton,
+    Icon,
+    Wrapper,
+    SelectArea,
+    Container
+} from '../../components/styles'
 
 import { useContext } from 'react';
 import { UserContext } from '../../App';
@@ -23,14 +22,14 @@ const Mypage = () => {
     const { id } = useParams();
     const cookie = new Cookies();
     const jwtToken = cookie.get("jwtToken");
-    const [newPassword1, setNewPassword1] = useState('');
-
     const {userInfo} = useContext(UserContext);
-    console.log("myPage useContext = ", userInfo);
-    // const [newPassword2, setNewPassword2] = useState('');
-    // const [isSamePw, setIsSamePw] = useState('false');
-    // const [checkText, setCheckText] = useState('');
+
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [checkText, setCheckText] = useState('');
     
+
     if(!jwtToken) {
         alert("접근이 불가능 합니다");
         navigate("/diaryList")
@@ -43,27 +42,91 @@ const Mypage = () => {
         return
     }
 
+    const checkCurrentPassword = async () => {
+        try {
+            await axios.post(
+                `${process.env.REACT_APP_SERVER_URL}/api/v1/members/signin`,
+                { username: userInfo.email, password: currentPassword },
+                { headers: { Authorization: `${jwtToken}` } }
+            );
+            return true;
+        } catch (error) {
+            console.error('Error checking current password:', error);
+            return false;
+        }
+    };
 
+    const handleChangePassword = async () => {
+        const isCurrentPasswordCorrect = await checkCurrentPassword();
+        if (!isCurrentPasswordCorrect) {
+            setCheckText('기존 비밀번호가 잘못 입력되었습니다.');
+            return;
+        }
+        try {
+            await axios.put(
+                `${process.env.REACT_APP_SERVER_URL}/api/v1/members`,
+                { password: newPassword },
+                { headers: { Authorization: `${jwtToken}` } }
+            );
+            setCheckText('비밀번호가 정상적으로 변경되었습니다.');
+        } catch (error) {
+            console.error('Error changing password:', error);
+        }
+    };
+
+    const handleSaveButtonClick = () => {
+        if (newPassword !== confirmNewPassword) {
+            setCheckText('새 비밀번호와 확인이 일치하지 않습니다.');
+            return;
+        }
+        handleChangePassword();
+    };
+
+    // const oncheckPw = async () => {
+    //     if (newPassword1 !== newPassword2) {
+    //         setCheckText('비밀번호가 일치하지 않습니다');
+    //         return;
+    //     } else {
+    //         setCheckText('비밀번호가 일치합니다.');
+    //         setIsSamePw(true)
+    //     }
+    // }
+
+    // const handleChangePassword = async () => {
+    //     try {
+    //         await axios.put(`${process.env.REACT_APP_SERVER_URL}/api/v1/members`,
+    //             { password: newPassword1 },
+    //             { headers: { Authorization: `${jwtToken}` } }
+    //         );
+    //         window.alert('비밀번호가 정상적으로 변경되었습니다.');
+    //     } catch (error) {
+    //         console.error('Error changing password:', error);
+    //     }
+    // };
     return (
-      <Wrapper>
-      <Container>
-          <Icon>
-              <FontAwesomeIcon style={{width: "90%", height: "90%"}} icon={faUserCircle} size="3x" color="black" />
-          </Icon>
-          <SelectArea>
-              <LoginInfo>아이디: &nbsp; {userInfo.email}</LoginInfo>
-              <LoginInfo>새 비밀번호: &nbsp;
-              <Input type="password" value={newPassword1} onChange={(e) => setNewPassword1(e.target.value)}
-                /></LoginInfo>
-              <LoginInfo>재입력: &nbsp;
-              <Input type="password" value={newPassword1} onChange={(e) => setNewPassword1(e.target.value)}
-                /></LoginInfo>
-              <LargeButton>저장하기</LargeButton>
-          </SelectArea>
-      </Container>
-      </Wrapper>
-    )
-}
+        <Wrapper>
+            <Container>
+                <Icon>
+                    <FontAwesomeIcon style={{ width: "90%", height: "90%" }} icon={faUserCircle} size="3x" color="black" />
+                </Icon>
+                <SelectArea>
+                    <LoginInfo>아이디: &nbsp; {userInfo.email}</LoginInfo>
+                    <LoginInfo>기존비밀번호: &nbsp;
+                        <Input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+                    </LoginInfo>
+                    <LoginInfo>새 비밀번호: &nbsp;
+                        <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                    </LoginInfo>
+                    <LoginInfo>새 비밀번호 확인: &nbsp;
+                        <Input type="password" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
+                    </LoginInfo>
+                    {checkText && <div>{checkText}</div>}
+                    <LargeButton onClick={handleSaveButtonClick}>저장하기</LargeButton>
+                </SelectArea>
+            </Container>
+        </Wrapper>
+    );
+};
 
 const LoginInfo = styled.div`
     display: flex;
@@ -72,8 +135,8 @@ const LoginInfo = styled.div`
     height: 40px;
 `
 const Input = styled.input`
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 10px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 10px;
 `
 export default Mypage;
