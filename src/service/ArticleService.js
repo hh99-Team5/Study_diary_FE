@@ -1,5 +1,9 @@
 import { ArticleApi } from "../axios/api";
 
+import { AuthHeader } from "./Cookie";
+
+const userHeaders = AuthHeader();
+
 export const searchArticle = async(id) => await ArticleApi.get(`/${id}`);
 
 export const createArticles = async(diary, headers) => await ArticleApi.post('', diary, headers);
