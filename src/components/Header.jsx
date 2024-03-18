@@ -41,7 +41,7 @@ const Header = () => {
 
     useEffect(() => {
         fetchData();
-    }, [location.pathname])
+    }, [])
     // 홈 경로인 경우 null 반환
     if (location.pathname === "/") {
         return null;
