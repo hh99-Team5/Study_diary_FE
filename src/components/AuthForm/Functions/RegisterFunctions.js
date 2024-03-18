@@ -1,4 +1,3 @@
-import axios from "axios";
 import { emailDuplicateCheck } from "../../../service/MemberService";
 
 export const emailCheckInvalidation = async (email, setModalMessage, setShowErrorModal) => {

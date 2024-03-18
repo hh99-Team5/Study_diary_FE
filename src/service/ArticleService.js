@@ -4,18 +4,22 @@ import { AuthHeader } from "./Cookie";
 
 const userHeaders = AuthHeader();
 
-export const searchArticle = async(id) => await ArticleApi.get(`/${id}`);
-
-export const createArticles = async(diary, headers) => await ArticleApi.post('', diary, headers);
-
-export const updateArticle = async(id, newData, headers) => await ArticleApi.put(`/${id}`, newData, headers);
-
-export const deleteArticle = async(id, headers) => await ArticleApi.delete(`/${id}`, headers);
-
+// List
 export const articleList = async() => await ArticleApi.get();
 
-export const countArticleLikes = async(id, headers) => await ArticleApi.get(`${id}/likes`, headers);
-
-export const likeArticle = async(id, headers) => await ArticleApi.post(`${id}/likes`,null ,headers);
-
 export const searchArticleList = async(params) => await ArticleApi.get('/search', params);
+
+// Diary
+export const searchArticle = async(id) => await ArticleApi.get(`/${id}`);
+
+export const createArticles = async(diary) => await ArticleApi.post('', diary, userHeaders);
+
+export const updateArticle = async(id, newData) => await ArticleApi.put(`/${id}`, newData, userHeaders);
+
+export const deleteArticle = async(id) => await ArticleApi.delete(`/${id}`, userHeaders);
+
+// Diary - like
+export const countArticleLikes = async(id) => await ArticleApi.get(`${id}/likes`, userHeaders);
+
+export const likeArticle = async(id) => await ArticleApi.post(`${id}/likes`,null ,userHeaders);
+

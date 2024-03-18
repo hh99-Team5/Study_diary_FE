@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios';
 
 // hook
 import { useState } from 'react';
@@ -33,17 +32,17 @@ import AlertModal from '../../components/modals/AlertModal';
 import { registerMember } from '../../service/MemberService';
 
 function RegisterForm({ onClose }) {
+    // hook
     const [user, setUser] = useState({});
     const [duplicate, setDuplicate] = useState(false);
     const [pwCheck, setPwCheck] = useState(false);
     const [checkText, setCheckText] = useState('');
     const pwTextRef = useRef(null);
-
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const navigate = useNavigate();
-
+    // custom hook
     const { value: email, handler: onEmailChangeHandler, ref: emailRef } = useInput();
     const { value: password, handler: onPasswordChangeHandler, ref: passwordRef } = useInput();
     const { value: checkPw, handler: oncheckPwHandler, ref: checkPwref } = useInput();
