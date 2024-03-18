@@ -8,14 +8,14 @@ import { useNavigate } from 'react-router';
 import { useRef } from 'react';
 import { Button } from '../styles';
 import {
-Input,
-FormFactor,
-FormContentElement,
-Wrapper,
-Form,
-FormTitle,
-FormContent,
-FormButtonArea,
+    Input,
+    FormFactor,
+    FormContentElement,
+    Wrapper,
+    Form,
+    FormTitle,
+    FormContent,
+    FormButtonArea,
 }
     from './styles';
 import AlertModal from '../../components/modals/AlertModal';
@@ -59,13 +59,32 @@ function RegisterForm({ onClose }) {
         }
     }
 
+    // 이메일 확인 정규식
+    const isEmailValid = (email) => {
+        const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+        return emailPattern.test(email);
+    }
+
     const onSubmitHandler = async () => {
+        // 이메일 확인
+        if (!isEmailValid(email)) {
+            setModalMessage("올바른 이메일 주소를 입력해주세요.");
+            setShowErrorModal(true);
+            return;
+        }
+
+        // 비밀번호 입력 확인
+        if (!password) {
+            setModalMessage("비밀번호를 입력해주세요");
+            setShowErrorModal(true);
+            return;
+        }
+
         const response = await onSubmitInvalidation
             (email, emailRef,
                 password, passwordRef,
                 duplicate,
-                pwCheck, checkPwref,
-                setModalMessage, setShowErrorModal);
+                pwCheck, checkPwref);
         if (response) setUser(response);
     }
 
@@ -80,7 +99,7 @@ function RegisterForm({ onClose }) {
     }
 
     const oncheckPw = () => {
-        const response = oncheckPwInvalidation(password, checkPw, pwTextRef, setModalMessage, setShowErrorModal);
+        const response = oncheckPwInvalidation(password, checkPw, pwTextRef);
         setCheckText(response.text);
         setPwCheck(response.boolean);
     }
