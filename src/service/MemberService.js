@@ -10,9 +10,9 @@ export const emailDuplicateCheck = async (email) => await memberApi.get(`/email-
 
 export const registerMember = async (user) => await memberApi.post('/signup',user);
 
-export const searchMember = async (headers) => await memberApi.get('', headers);
+export const searchMember = async () => await memberApi.get('', userHeaders);
 
-export const updateMember = async (updateInfo, headers) => await memberApi.put('', updateInfo, headers);
+export const updateMember = async (updateInfo) => await memberApi.put('', updateInfo, userHeaders);
 
 export const memberDiaries = async () => await memberApi.get('/articles', userHeaders);
 

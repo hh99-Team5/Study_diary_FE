@@ -43,7 +43,7 @@ const Header = () => {
     const fetchData = async() => {     
         try {
             const response = await searchMember();
-            setUser(response.data.data)
+            setUser(response.data.data);
         } catch (error) {
             console.log("error = ", error)
         }
@@ -51,7 +51,7 @@ const Header = () => {
 
     useEffect(() => {
         fetchData();
-    }, [])
+    }, [location])
 
 
     // 홈 경로인 경우 null 반환
