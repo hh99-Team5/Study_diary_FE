@@ -1,13 +1,22 @@
 import axios from "axios";
+import { emailDuplicateCheck } from "../../../service/MemberService";
 
 export const emailCheckInvalidation = async (email, setModalMessage, setShowErrorModal) => {
+    const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+
     if (!email) {
         setModalMessage("이메일을 입력해주세요");
         setShowErrorModal(true);
         return false;
     }
+
+    if(!emailPattern.test(email)){
+        setModalMessage("올바른 이메일 주소를 입력해주세요.");
+        setShowErrorModal(true);
+        return;
+    }
     try {
-        return await axios.get(`https://www.openmpy.com/api/v1/members/email-check?email=${email}`);
+        return await emailDuplicateCheck(email);
     } catch (error) {
         console.log("duplicate error = ", error);
     }

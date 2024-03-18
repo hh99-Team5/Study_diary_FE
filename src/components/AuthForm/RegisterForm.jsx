@@ -1,11 +1,21 @@
 import React from 'react'
-import { useState } from 'react';
-import { useInput } from '../../hooks/userHooks';
-import { emailCheckInvalidation, oncheckPwInvalidation, onSubmitInvalidation } from './Functions/RegisterFunctions';
 import axios from 'axios';
+
+// hook
+import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useRef } from 'react';
+import { useInput } from '../../hooks/userHooks';
+
+// 정규식 API
+import { 
+    emailCheckInvalidation,
+    oncheckPwInvalidation,
+    onSubmitInvalidation }
+from './Functions/RegisterFunctions';
+
+// Components
 import { Button } from '../styles';
 import {
     Input,
@@ -17,8 +27,10 @@ import {
     FormContent,
     FormButtonArea,
 }
-    from './styles';
+from './styles';
 import AlertModal from '../../components/modals/AlertModal';
+
+import { registerMember } from '../../service/MemberService';
 
 function RegisterForm({ onClose }) {
     const [user, setUser] = useState({});
@@ -46,8 +58,7 @@ function RegisterForm({ onClose }) {
 
     const userReposit = async () => {
         try {
-            const response = await axios.post('https://www.openmpy.com/api/v1/members/signup',
-                user);
+            const response = await registerMember(user);
             console.log("login user = ", response);
             if (response.status === 201) {
                 setModalMessage("회원가입 성공!");

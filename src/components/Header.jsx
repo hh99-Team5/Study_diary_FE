@@ -1,52 +1,64 @@
-import { AiTwotoneHome } from "react-icons/ai";
+import Cookies from "universal-cookie";
+
+//  hook
 import { useLocation, useNavigate } from "react-router";
-import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { logoutUser } from "../redux/modules/userSlice";
-import Cookies from "universal-cookie";
-import ModalPortal from "./modals/Portal";
-import ListModal from "./modals/ListModal";
 import { useSwitch } from "../hooks/userHooks";
 import { useEffect } from "react";
+
+// styledComponent
 import 
-    {
-        HeaderBorder,
-        StyledSpan,
-        HeaderDiv
-    } from "./AuthForm/styles";
+{
+    HeaderBorder,
+    StyledSpan,
+    HeaderDiv
+} from "./AuthForm/styles";
+import ModalPortal from "./modals/Portal";
+import ListModal from "./modals/ListModal";
+import { AiTwotoneHome } from "react-icons/ai";
+
+// api
+
+// vaildation api
+import { logoutUser } from "../redux/modules/userSlice";
+// service api
+import { searchMember } from "../service/MemberService";
 
     
 const Header = () => {
+    // hook
     const [userData, setUser] = useState({});
     const nav = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
+    const {state, handleState} = useSwitch();
+    
+    // token
     const cookie = new Cookies();
     const userToken = cookie.get('jwtToken');
-    const {state, handleState} = useSwitch();
+    
 
+    // user장보 호출
     const fetchData = async() => {     
         try {
-            const response = await axios.get(`https://www.openmpy.com/api/v1/members`, {headers: {Authorization: userToken}});
-            console.log("response.data.data = ", response.data.data);
+            const response = await searchMember();
             setUser(response.data.data)
         } catch (error) {
             console.log("error = ", error)
         }
     }
-    // const {isLoading, isError, data:userData} = useQuery("user", fetchData)
- 
-
 
     useEffect(() => {
         fetchData();
     }, [])
+
+
     // 홈 경로인 경우 null 반환
     if (location.pathname === "/") {
         return null;
     }
-    console.log("header data = ", userData);
+
 
     //로그아웃함수
     const onLogoutHandler = () => {
