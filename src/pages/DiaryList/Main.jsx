@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react"
+import Cookies from "universal-cookie";
+
+// hook 
+import React, { useState } from "react"
 import { useQuery } from 'react-query';
-import axios from "axios";
 import { useRef } from "react";
 import { useNavigate } from "react-router";
-import { useSelector } from 'react-redux';
-import Cookies from "universal-cookie";
+
+// styled Component
 import 
 { 
   Container,
   Wrapper,
 } from "./styles";
-
 import 
 { 
   SelectArea,
@@ -18,11 +19,16 @@ import
   BtnArea 
 } from "./components";
 
+// api
+import 
+{ 
+    articleList,
+    searchArticleList
+} from "../../service/ArticleService";
 
 const Diaries = () => {
     const cookie = new Cookies();
     const userToken = cookie.get('jwtToken');
-    const user = useSelector((state) => state.user.value);
     // console.log("redux user = ", user);
 
     //검색조건, 검색어, 검색상태 관리
@@ -33,26 +39,34 @@ const Diaries = () => {
     const selectRef = useRef(null);
     const nav = useNavigate();
 
+    // useQuery 적용
     //전체 일지 리스트 가져오기
     const { isLoading: isLoadingDiaries, isError: isErrorDiaries, data: diaries } = useQuery(
         "diaries",
-        () => axios.get(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles`).then((res) => res.data.data),
+        async() => {
+            try {
+                const res = await articleList();
+                return res.data.data
+            } catch (error) {
+                console.log("error = ", error);
+            }
+        },
         { enabled: !searched } // 검색하지 않은 경우 or 검색어가 공백인 경우에만 활성화
     );
-
+    
     // 검색 결과 가져오기
     const { isLoading: isLoadingSearchResults, isError: isErrorSearchResults, data: searchResults } = useQuery(
         ["search", type, keyword],
-        () => {
-            if (searched && keyword !== '') {
-                return axios.get(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles/search`, {
-                    params: {
-                        type,
-                        keyword
-                    }
-                }).then((res) => res.data.data);
-            } else {
-                return Promise.resolve({ data: diaries }); // 검색하지 않거나 검색어가 빈 문자열인 경우 전체 목록 리턴
+        async() => {
+            try {
+                if (searched && keyword !== '') {
+                    const res = await searchArticleList({ params: { type, keyword } })
+                    return res.data.data
+                } else {
+                    return Promise.resolve({ data: diaries }); // 검색하지 않거나 검색어가 빈 문자열인 경우 전체 목록 리턴
+                }
+            } catch (error) {
+                console.log("error = ", error)
             }
         },
         { enabled: searched } // 검색을 했고 검색어가 공백이 아닌 경우에만 활성화
@@ -70,12 +84,8 @@ const Diaries = () => {
         }
     }
 
-    useEffect(() => {
-        if (Array.isArray(searchResults) && searchResults.length === 0 && !isLoadingSearchResults) {
-            alert('검색 결과가 없습니다.');
-        }
-    }, []);
-    
+    // 검색결과 zero 처리하기
+
 
     if (isLoadingDiaries || isLoadingSearchResults) return <div>Loading...</div>;
     if (isErrorDiaries || isErrorSearchResults) return <div>로딩 중 오류 발생</div>;
