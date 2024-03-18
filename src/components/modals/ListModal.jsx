@@ -1,12 +1,11 @@
+// hook
 import React, { useEffect } from 'react'
-import axios from 'axios'
 import { useQuery } from 'react-query'
-import 
-    { 
-        Background,
-        Content 
-    } from './styles'
 import { useState } from 'react'
+import { UserContext } from '../../App'
+import { useContext } from 'react'
+
+// styled Componenet
 import { 
     DiaryList,
     Tbody,
@@ -15,25 +14,31 @@ import {
     Thead,
     SelectWrapper,
  } from '../../pages/DiaryList/styles'
-import { ListContainer } from './styles'
-import { UserContext } from '../../App'
-import { useContext } from 'react'
-
+import 
+{ 
+    ListContainer, 
+    Background,
+    Content 
+} from './styles'
 import 
 { 
     MyListButton,
     BtnWrapper 
 } from '../styles'
 
+// api
+import { articleList } from '../../service/ArticleService'
+
 const ListModal = ({onClose}) => {
     // useContext를 통한 데이터 가져오기
     const {userInfo} = useContext(UserContext);
+    
     // 리스트 필터링
     const [myList, setMyList] = useState([]);
 
     // 리스트 불러오기
     const { data } = useQuery('myDiaries', async () => {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/v1/articles`);
+        const response = await articleList();
         return response.data.data;
     });
 
