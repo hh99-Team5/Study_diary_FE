@@ -4,6 +4,9 @@ import { useQuery, useQueryClient } from 'react-query';
 import { diaryUpdateMode } from './UpdateDiary';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import AlertModal from '../../components/modals/AlertModal';
+import { deleteComment, updateNewComment, createComment } from '../../service/CommentService'; 
+
 import {
     Button,
     ButtonArea,
@@ -14,7 +17,6 @@ import {
     StyledTextarea,
     ScrollableContainer
 } from './styles'
-import AlertModal from '../../components/modals/AlertModal';
 
 const Comment = () => {
     const queryClient = useQueryClient();
@@ -102,15 +104,11 @@ const Comment = () => {
     const handleUpdateComment = async (e, commentId) => {
         e.preventDefault();
         try {
-            const response = await axios.put(
-                `${process.env.REACT_APP_SERVER_URL}/api/v1/comments/${commentId}`,
-                { contents: updateComment },
-                {
-                    headers: {
-                        Authorization: `${jwtToken}`,
-                    },
-                }
+            const response = await updateNewComment(commentId, 
+                { contents: updateComment }, 
+                { Authorization: jwtToken }
             );
+            console.log('댓글 수정 응답:', response);
             const updatedComment = response.data;
             setComments(prevComments => prevComments.map(comment => {
                 if (comment.id === updatedComment.id) {
@@ -131,19 +129,10 @@ const Comment = () => {
     // 댓글 삭제 핸들
     const handleDeleteComment = async (commentId) => {
         try {
-            await axios.delete(
-                `${process.env.REACT_APP_SERVER_URL}/api/v1/comments/${commentId}`,
-                {
-                    headers: {
-                        Authorization: `${jwtToken}`,
-                    },
-                }
-            );
-            // 삭제 후 댓글 목록 다시 불러오기
+            await deleteComment(commentId, { headers: { Authorization: jwtToken }});
             queryClient.invalidateQueries(['comment', id]);
-            console.log('댓글이 성공적으로 삭제되었습니다:', commentId);
         } catch (error) {
-            console.error('댓글 삭제 실패:', error.response.data.message);
+            console.error('댓글 삭제 실패:', error);
         }
     };
 
