@@ -13,20 +13,15 @@ export const emailCheckInvalidation = async (email, setModalMessage, setShowErro
     }
 };
 
-export const oncheckPwInvalidation = (password, checkPw, pwTextRef, setModalMessage, setShowErrorModal) => {
-    if (!password) {
-        setModalMessage("비밀번호를 입력해주세요");
-        setShowErrorModal(true);
-        return "";
+export const oncheckPwInvalidation = (password, checkPw) => {
+    if (password.length < 5) {
+        return { text: "비밀번호는 5자 이상이어야 합니다.", boolean: false };
     }
     if (password === checkPw) {
-        pwTextRef.current.style.color = "green";
-        let result = { text: "비밀번호가 일치 합니다.", boolean: true };
-        return result;
+        console.log("비밀번호가 일치합니다.");
+        return { text: "비밀번호가 일치합니다.", boolean: true };
     } else {
-        pwTextRef.current.style.color = "red";
-        let result = { text: "비밀번호가 일치 하지 않습니다.", boolean: false };
-        return result;
+        return { text: "비밀번호가 일치하지 않습니다.", boolean: false };
     }
 };
 
@@ -60,8 +55,6 @@ export const onSubmitInvalidation = async (
         return false;
     }
     if (!pwCheck) {
-        setModalMessage("비밀 번호 일치여부를 확인해주세요");
-        setShowErrorModal(true);
         checkPwref.current.focus();
         return false;
     }
