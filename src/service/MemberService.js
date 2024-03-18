@@ -15,3 +15,5 @@ export const searchMember = async (headers) => await memberApi.get('', headers);
 export const updateMember = async (updateInfo, headers) => await memberApi.put('', updateInfo, headers);
 
 export const memberDiaries = async () => await memberApi.get('/articles', userHeaders);
+
+export const passwordCheck = async (newData) => await memberApi.post('/signin', newData, userHeaders);

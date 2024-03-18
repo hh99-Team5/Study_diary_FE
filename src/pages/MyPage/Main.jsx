@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { useState } from 'react';
 import Cookies from 'universal-cookie';
+
+// fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+
+// styledComponent
 import styled from 'styled-components';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router';
 import {
     LargeButton,
     Icon,
@@ -14,41 +14,50 @@ import {
     Container
 } from '../../components/styles'
 
+
+// hook
+import { useState } from 'react';
 import { useContext } from 'react';
+import { useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import { UserContext } from '../../App';
 
+// api
+import {passwordCheck, updateMember } from '../../service/MemberService';
+
+
+
 const Mypage = () => {
-    const navigate = useNavigate();
-    const { id } = useParams();
+    // token
     const cookie = new Cookies();
     const jwtToken = cookie.get("jwtToken");
-    const {userInfo} = useContext(UserContext);
 
+    // hook
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const {userInfo} = useContext(UserContext);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [checkText, setCheckText] = useState('');
     
-
+    // token 확인
     if(!jwtToken) {
         navigate("/diaryList")
         return
     }
 
-    console.log("userInfo.id type = ", typeof userInfo.id)
-
+    // loginUser 확인
     if(+id != userInfo.id) {
         navigate("/diaryList")
         return
     }
 
+    // password validation
+    
     const checkCurrentPassword = async () => {
         try {
-            await axios.post(
-                `${process.env.REACT_APP_SERVER_URL}/api/v1/members/signin`,
-                { username: userInfo.email, password: currentPassword },
-                { headers: { Authorization: `${jwtToken}` } }
-            );
+            await passwordCheck();
             return true;
         } catch (error) {
             console.error('Error checking current password:', error);
@@ -63,11 +72,7 @@ const Mypage = () => {
             return;
         }
         try {
-            await axios.put(
-                `${process.env.REACT_APP_SERVER_URL}/api/v1/members`,
-                { password: newPassword },
-                { headers: { Authorization: `${jwtToken}` } }
-            );
+            await updateMember();
             setCheckText('비밀번호가 정상적으로 변경되었습니다.');
         } catch (error) {
             console.error('Error changing password:', error);

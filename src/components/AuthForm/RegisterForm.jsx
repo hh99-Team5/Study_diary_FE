@@ -1,11 +1,20 @@
 import React from 'react'
+
+// hook
 import { useState } from 'react';
-import { useInput } from '../../hooks/userHooks';
-import { emailCheckInvalidation, oncheckPwInvalidation, onSubmitInvalidation } from './Functions/RegisterFunctions';
-import axios from 'axios';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useRef } from 'react';
+import { useInput } from '../../hooks/userHooks';
+
+// 정규식 API
+import { 
+    emailCheckInvalidation,
+    oncheckPwInvalidation,
+    onSubmitInvalidation }
+from './Functions/RegisterFunctions';
+
+// Components
 import { Button } from '../styles';
 import {
     Input,
@@ -17,21 +26,23 @@ import {
     FormContent,
     FormButtonArea,
 }
-    from './styles';
+from './styles';
 import AlertModal from '../../components/modals/AlertModal';
 
+import { registerMember } from '../../service/MemberService';
+
 function RegisterForm({ onClose }) {
+    // hook
     const [user, setUser] = useState({});
     const [duplicate, setDuplicate] = useState(false);
     const [pwCheck, setPwCheck] = useState(false);
     const [checkText, setCheckText] = useState('');
     const pwTextRef = useRef(null);
-
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const navigate = useNavigate();
-
+    // custom hook
     const { value: email, handler: onEmailChangeHandler, ref: emailRef } = useInput();
     const { value: password, handler: onPasswordChangeHandler, ref: passwordRef } = useInput();
     const { value: checkPw, handler: oncheckPwHandler, ref: checkPwref } = useInput();
@@ -46,8 +57,7 @@ function RegisterForm({ onClose }) {
 
     const userReposit = async () => {
         try {
-            const response = await axios.post('https://www.openmpy.com/api/v1/members/signup',
-                user);
+            const response = await registerMember(user);
             console.log("login user = ", response);
             if (response.status === 201) {
                 setModalMessage("회원가입 성공!");
