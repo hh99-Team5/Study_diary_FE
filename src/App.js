@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
+import { searchMember } from "./service/MemberService";
 import GlobalStyle from "./GlobalStyle";
 import './reset.css';
 import Router from "./shared/Router";
@@ -19,8 +20,7 @@ const App =() => {
     }
   },[])
   const loginUser = async() => {
-    const response = await axios.get("https://www.openmpy.com/api/v1/members",
-    { headers:{'Authorization': jwtToken }})
+    const response = await searchMember();
     setUser(response.data.data);
   }
 
